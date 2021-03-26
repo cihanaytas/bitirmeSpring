@@ -36,7 +36,6 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
             // en az 1 digit karakter
             new CharacterRule(EnglishCharacterData.Digit, 1),
 
-
             // boşluk yok
             new WhitespaceRule()
 
@@ -45,8 +44,7 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
         if (result.isValid()) {
             return true;
         }
-        System.out.println("buradyimmm");
-        System.out.println(validator.getMessages(result));
+
         List<String> messages = validator.getMessages(result);
 
         String messageTemplate = messages.stream()
