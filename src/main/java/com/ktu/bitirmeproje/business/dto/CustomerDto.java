@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.ktu.bitirmeproje.data.entity.Address;
+import com.ktu.bitirmeproje.password.ValidPassword;
 
 public class CustomerDto {
 	
@@ -23,8 +24,10 @@ public class CustomerDto {
 	@Email
 	private String e_mail;
 	
-	@NotNull
-	@Size(min = 6, max = 20, message = "Your password should be at least 6 character")
+	
+	//@NotNull
+	//@Size(min = 6, max = 20, message = "Your password should be at least 6 character")
+	@ValidPassword
 	private String password;
 	
 	private Address address;

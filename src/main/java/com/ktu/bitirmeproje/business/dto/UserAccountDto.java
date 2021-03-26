@@ -8,11 +8,13 @@ import javax.validation.constraints.Size;
 import org.springframework.lang.Nullable;
 
 import com.ktu.bitirmeproje.data.entity.Address;
+import com.ktu.bitirmeproje.password.ValidPassword;
 import com.ktu.bitirmeproje.utils.UserRole;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+ 
 
 
 @Data
@@ -34,8 +36,8 @@ public class UserAccountDto {
 	@Email
 	private String e_mail;
 	
-	@NotNull
-	@Size(min = 6, max = 20, message = "Your password should be at least 6 character")
+
+	@ValidPassword
 	private String password;
 	
 	@Nullable

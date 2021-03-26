@@ -3,9 +3,9 @@ package com.ktu.bitirmeproje.business.impl;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
- 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service; 
 import com.ktu.bitirmeproje.business.dto.UserAccountDto;
 import com.ktu.bitirmeproje.business.service.UserAccountService;
 import com.ktu.bitirmeproje.data.entity.UserAccount;
@@ -18,6 +18,7 @@ public class UserAccountServiceImpl implements UserAccountService{
 
 	@Autowired
 	private UserAccountRepository uaRepository;
+	
 	
 	
 	
@@ -39,12 +40,18 @@ public class UserAccountServiceImpl implements UserAccountService{
 	
 	
 	@Override
-	public UserAccount save(UserAccountDto uaDto) {
+	public UserAccount save(UserAccountDto uaDto){
 		try {
+			String pass = uaDto.getPassword();
+		    String pattern = "(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{6,}";
+		    //if(pass.matches(pattern)) {
 			UserAccount ua = new UserAccount();
 			convertToEntity(ua, uaDto);
-	
 			return uaRepository.save(ua);
+			//}
+		    //else {
+		    	//return null;
+		    //}
 		}
 		
 		catch (Exception e) {
@@ -53,6 +60,8 @@ public class UserAccountServiceImpl implements UserAccountService{
 		}
 	}
 	
+	
+
 	
 	
 	@Override
