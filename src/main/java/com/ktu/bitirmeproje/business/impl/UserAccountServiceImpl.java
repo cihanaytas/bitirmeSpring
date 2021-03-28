@@ -10,6 +10,7 @@ import com.ktu.bitirmeproje.business.dto.UserAccountDto;
 import com.ktu.bitirmeproje.business.service.UserAccountService;
 import com.ktu.bitirmeproje.data.entity.UserAccount;
 import com.ktu.bitirmeproje.data.repository.UserAccountRepository;
+import com.ktu.bitirmeproje.exception.ErrorDetails;
 import com.ktu.bitirmeproje.utils.ReqBodyLogin;
 
 @Service
@@ -38,20 +39,31 @@ public class UserAccountServiceImpl implements UserAccountService{
 		}
 	}
 	
+
 	
 	@Override
-	public UserAccount save(UserAccountDto uaDto){
+	public ResponseEntity<?> save(UserAccountDto uaDto){
 		try {
-			String pass = uaDto.getPassword();
-		    String pattern = "(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{6,}";
-		    //if(pass.matches(pattern)) {
+			
+			if(uaRepository.existsById(uaDto.getNickName())) {
+				ErrorDetails err = new ErrorDetails(null, null, "Bu kullanıcı adı zaten kullanılıyor. Lütfen başka bir kullanıcı adı giriniz.");
+				
+				return ResponseEntity.badRequest()
+						.body(err);
+			}
+			
+			if(uaRepository.existsByMail(uaDto.getE_mail())) {
+				ErrorDetails err = new ErrorDetails(null, null, "Bu mail adresi sistemde kayıtlı. Lütfen başka bir mail adresi giriniz.");
+				
+				return ResponseEntity.badRequest()
+						.body(err);
+			}
+			
+			
 			UserAccount ua = new UserAccount();
 			convertToEntity(ua, uaDto);
-			return uaRepository.save(ua);
-			//}
-		    //else {
-		    	//return null;
-		    //}
+			return ResponseEntity.ok(uaRepository.save(ua));
+					
 		}
 		
 		catch (Exception e) {
@@ -59,7 +71,6 @@ public class UserAccountServiceImpl implements UserAccountService{
 			return null;
 		}
 	}
-	
 	
 
 	

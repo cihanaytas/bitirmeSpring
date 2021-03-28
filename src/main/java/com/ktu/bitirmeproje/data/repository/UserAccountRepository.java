@@ -12,5 +12,8 @@ public interface UserAccountRepository extends CrudRepository<UserAccount, Strin
 	
 	@Query("select u.role from UserAccount u where u.nickName = :nickName")
 	public String getUserRole(@Param("nickName") String nickName);
+	
+	@Query("select case when count(u)> 0 then true else false end from UserAccount u where u.e_mail = :mail")
+	public Boolean existsByMail(@Param("mail") String mail);
  
 }

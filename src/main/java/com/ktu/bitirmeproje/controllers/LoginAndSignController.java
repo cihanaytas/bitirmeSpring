@@ -32,7 +32,7 @@ public class LoginAndSignController {
 	}
 
 	@PostMapping("/addcustomer")
-	public UserAccount addCustomer(@Valid @RequestBody UserAccountDto customer) {
+	public ResponseEntity<?> addCustomer(@Valid @RequestBody UserAccountDto customer) {
 		return uaService.save(customer);		  
 	}
 	
