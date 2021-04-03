@@ -14,9 +14,20 @@ public class CustomerTestController {
 		return "basarili";
 	}
 	
-	@GetMapping("test2")
-	public String tss() {
+	@GetMapping("test/a")
+	public String tsas() {
 		return "2 bas";
+	}
+	
+	
+	@GetMapping("test/a/b")
+	public String tsss() {
+		return "3 ";
+	}
+	
+	@GetMapping("test/a/b/c")
+	public String tssds() {
+		return "3d ";
 	}
 	
 }

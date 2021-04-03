@@ -19,15 +19,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LaptopDto {
 
-	public LaptopDto(long price, Date date, String storeNickName, String features,int unit,  CategoryType categoryType,
+	public LaptopDto(long price, Date date, String storeNickName, String features,int units,  CategoryType category,
 			String brand, String model, int rAMsize, long hDDsize, ProcessorType processorType,
 			ProcessorModelType processorModelType, ColorType color) {
 		this.price = price;
 		this.date = date;
 		StoreNickName = storeNickName;
 		this.features = features;
-		this.unit = unit;
-		this.categoryType = categoryType;
+		this.units = units;
+		this.category = category;
 		this.brand = brand;
 		this.model = model;
 		RAMsize = rAMsize;
@@ -39,11 +39,11 @@ public class LaptopDto {
 	@Nullable
 	private long productID;
 	private long price;
-    private int unit;
+    private int units;
 	private java.util.Date date;
 	private String StoreNickName;
 	private String features;
-	private CategoryType categoryType;
+	private CategoryType category;
 	
 	@Nullable
 	private long laptopId;

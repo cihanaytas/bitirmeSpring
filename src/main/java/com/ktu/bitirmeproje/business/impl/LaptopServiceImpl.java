@@ -42,8 +42,8 @@ public class LaptopServiceImpl implements LaptopService{
 		Optional<UserAccount> store = uaRepository.findById(laptopDto.getStoreNickName());
 		product.setStore(store.get());
 		product.setFeatures(laptopDto.getFeatures());
-		product.setCategory(laptopDto.getCategoryType());
-		product.setUnits(laptopDto.getUnit());
+		product.setCategory(laptopDto.getCategory());
+		product.setUnits(laptopDto.getUnits());
 		
 		laptop.setProduct(product);
 		laptop.setBrand(laptopDto.getBrand());
