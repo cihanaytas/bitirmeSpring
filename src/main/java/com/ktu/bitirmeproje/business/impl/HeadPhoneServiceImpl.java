@@ -1,5 +1,6 @@
 package com.ktu.bitirmeproje.business.impl;
 
+import java.util.Date;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -15,6 +16,7 @@ import com.ktu.bitirmeproje.data.entity.prod.Product;
 import com.ktu.bitirmeproje.data.repository.HeadPhoneRepository;
 import com.ktu.bitirmeproje.data.repository.ProductRepository;
 import com.ktu.bitirmeproje.data.repository.UserAccountRepository;
+import com.ktu.bitirmeproje.utils.UserByAuth;
 
 @Service
 @Transactional
@@ -27,8 +29,21 @@ public class HeadPhoneServiceImpl implements HeadPhoneService{
 	@Autowired
 	private HeadPhoneRepository headPhoneRepository;
 	
+	@Autowired
+	private UserByAuth uba;
+	
 	@Override
 	public void save(HeadPhoneDto headPhoneDto) {
+		
+
+		UserAccount user = uba.getUserByAuth();
+		
+		headPhoneDto.getProduct().setStoreNickName(user.getNickName());
+		Date date= new Date();
+		
+		headPhoneDto.getProduct().setDate(date);
+		
+				
 		Product product = new Product();
 		HeadPhone headPhone = new HeadPhone();
 		convertToEntity(product, headPhone, headPhoneDto);
@@ -38,13 +53,13 @@ public class HeadPhoneServiceImpl implements HeadPhoneService{
 	}
 	
 	public void convertToEntity(Product product, HeadPhone headPhone, HeadPhoneDto hpDto) {
-		product.setPrice(hpDto.getPrice());
-		product.setDate(hpDto.getDate());
-		Optional<UserAccount> store = uaRepository.findById(hpDto.getStoreNickName());
+		product.setPrice(hpDto.getProduct().getPrice());
+		product.setDate(hpDto.getProduct().getDate());
+		Optional<UserAccount> store = uaRepository.findById(hpDto.getProduct().getStoreNickName());
 		product.setStore(store.get());
-		product.setFeatures(hpDto.getFeatures());
-		product.setCategory(hpDto.getCategoryType());
-		product.setUnits(hpDto.getUnit());
+		product.setFeatures(hpDto.getProduct().getFeatures());
+		product.setCategory(hpDto.getProduct().getCategory());
+		product.setUnits(hpDto.getProduct().getUnits());
 		
 		headPhone.setProduct(product);
 		headPhone.setColor(hpDto.getColor());

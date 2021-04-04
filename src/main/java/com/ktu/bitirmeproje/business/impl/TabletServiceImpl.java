@@ -1,5 +1,6 @@
 package com.ktu.bitirmeproje.business.impl;
 
+import java.util.Date;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import com.ktu.bitirmeproje.data.entity.prod.Tablet;
 import com.ktu.bitirmeproje.data.repository.ProductRepository;
 import com.ktu.bitirmeproje.data.repository.TabletRepository;
 import com.ktu.bitirmeproje.data.repository.UserAccountRepository;
+import com.ktu.bitirmeproje.utils.UserByAuth;
 
 @Service
 @Transactional
@@ -26,8 +28,19 @@ public class TabletServiceImpl implements TabletService{
 	@Autowired
 	private TabletRepository tabletRepository;
 	
+	@Autowired
+	private UserByAuth uba;
+	
 	@Override
 	public void save(TabletDto tabletDto) {
+
+		UserAccount user = uba.getUserByAuth();
+		
+		tabletDto.getProduct().setStoreNickName(user.getNickName());
+		Date date= new Date();
+		
+		tabletDto.getProduct().setDate(date);
+		
 		Product product = new Product();
 		Tablet tablet = new Tablet();
 		converToEntity(product, tablet, tabletDto);
@@ -38,16 +51,16 @@ public class TabletServiceImpl implements TabletService{
 	
 	
 	public void converToEntity(Product product, Tablet tablet, TabletDto tabletDto) {
-		product.setPrice(tabletDto.getPrice());
-		product.setDate(tabletDto.getDate());
-		Optional<UserAccount> store = uaRepository.findById(tabletDto.getStoreNickName());
+		product.setPrice(tabletDto.getProduct().getPrice());
+		product.setDate(tabletDto.getProduct().getDate());
+		Optional<UserAccount> store = uaRepository.findById(tabletDto.getProduct().getStoreNickName());
 		product.setStore(store.get());
-		product.setFeatures(tabletDto.getFeatures());
-		product.setCategory(tabletDto.getCategoryType());
-		product.setUnits(tabletDto.getUnit());
+		product.setFeatures(tabletDto.getProduct().getFeatures());
+		product.setCategory(tabletDto.getProduct().getCategory());
+		product.setUnits(tabletDto.getProduct().getUnits());
 		
 		tablet.setProduct(product);
-		tablet.setPhonetype(tabletDto.getPhonetype());
+		tablet.setPhonetype(tabletDto.getPhoneType());
 		tablet.setBrand(tabletDto.getBrand());
 		tablet.setModel(tabletDto.getModel());
 		tablet.setRAMsize(tabletDto.getRAMsize());

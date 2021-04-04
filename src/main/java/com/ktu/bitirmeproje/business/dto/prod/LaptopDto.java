@@ -1,33 +1,21 @@
 package com.ktu.bitirmeproje.business.dto.prod;
 
-import java.util.Date;
 
-import org.springframework.lang.Nullable;
-
-import com.ktu.bitirmeproje.utils.CategoryType;
 import com.ktu.bitirmeproje.utils.ColorType;
 import com.ktu.bitirmeproje.utils.ProcessorModelType;
 import com.ktu.bitirmeproje.utils.ProcessorType;
-
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class LaptopDto {
 
-	public LaptopDto(long price, Date date, String storeNickName, String features,int units,  CategoryType category,
-			String brand, String model, int rAMsize, long hDDsize, ProcessorType processorType,
+	public LaptopDto(ProductDto product,String brand, String model, int rAMsize, long hDDsize, ProcessorType processorType,
 			ProcessorModelType processorModelType, ColorType color) {
-		this.price = price;
-		this.date = date;
-		StoreNickName = storeNickName;
-		this.features = features;
-		this.units = units;
-		this.category = category;
+ 
+		this.product = product;
 		this.brand = brand;
 		this.model = model;
 		RAMsize = rAMsize;
@@ -36,17 +24,10 @@ public class LaptopDto {
 		this.processorModelType = processorModelType;
 		this.color = color;
 	}
-	@Nullable
-	private long productID;
-	private long price;
-    private int units;
-	private java.util.Date date;
-	private String StoreNickName;
-	private String features;
-	private CategoryType category;
+
+	private ProductDto product;
 	
-	@Nullable
-	private long laptopId;
+	
 	private String brand;
 	private String model;
 	private int RAMsize;

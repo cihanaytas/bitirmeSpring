@@ -3,6 +3,8 @@ package com.ktu.bitirmeproje.business.impl;
  
 
 import javax.transaction.Transactional;
+
+import java.util.Date;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import com.ktu.bitirmeproje.data.entity.prod.Product;
 import com.ktu.bitirmeproje.data.repository.PhoneRepository;
 import com.ktu.bitirmeproje.data.repository.ProductRepository;
 import com.ktu.bitirmeproje.data.repository.UserAccountRepository;
+import com.ktu.bitirmeproje.utils.UserByAuth;
 
 @Service
 @Transactional
@@ -27,10 +30,19 @@ public class PhoneServiceImpl implements PhoneService{
 	
 	 @Autowired
 	 private ProductRepository productRepository;
+	 
+		@Autowired
+		private UserByAuth uba;
 	
 	@Override
 	public Phone save(PhoneDto phoneDto) {
+
+		UserAccount user = uba.getUserByAuth();
 		
+		phoneDto.getProduct().setStoreNickName(user.getNickName());
+		Date date= new Date();
+		
+		phoneDto.getProduct().setDate(date);
 		 
 		Phone phone = new Phone();
 		Product product = new Product();
@@ -46,13 +58,13 @@ public class PhoneServiceImpl implements PhoneService{
 	
 	public void converToEntity(Product product, Phone phone, PhoneDto phoneDto) {
 
-		product.setPrice(phoneDto.getPrice());
-		product.setDate(phoneDto.getDate());
-		Optional<UserAccount> store = uaRepository.findById(phoneDto.getStoreNickName());
+		product.setPrice(phoneDto.getProduct().getPrice());
+		product.setDate(phoneDto.getProduct().getDate());
+		Optional<UserAccount> store = uaRepository.findById(phoneDto.getProduct().getStoreNickName());
 		product.setStore(store.get());
-		product.setFeatures(phoneDto.getFeatures());
-		product.setCategory(phoneDto.getCategoryType());
-		product.setUnits(phoneDto.getUnit());
+		product.setFeatures(phoneDto.getProduct().getFeatures());
+		product.setCategory(phoneDto.getProduct().getCategory());
+		product.setUnits(phoneDto.getProduct().getUnits());
 		 
 		phone.setProduct(product);
 		phone.setBrand(phoneDto.getBrand());

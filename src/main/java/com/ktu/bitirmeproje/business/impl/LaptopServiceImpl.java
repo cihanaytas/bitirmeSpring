@@ -1,5 +1,6 @@
 package com.ktu.bitirmeproje.business.impl;
 
+import java.util.Date;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -15,6 +16,7 @@ import com.ktu.bitirmeproje.data.entity.prod.Product;
 import com.ktu.bitirmeproje.data.repository.LaptopRepository;
 import com.ktu.bitirmeproje.data.repository.ProductRepository;
 import com.ktu.bitirmeproje.data.repository.UserAccountRepository;
+import com.ktu.bitirmeproje.utils.UserByAuth;
 
 @Service
 @Transactional
@@ -27,8 +29,18 @@ public class LaptopServiceImpl implements LaptopService{
 	@Autowired
 	private LaptopRepository laptopRepository;
 	
+	@Autowired
+	private UserByAuth uba;
+	
 	@Override
 	public void save(LaptopDto laptopDto) {
+
+		UserAccount user = uba.getUserByAuth();
+		
+		laptopDto.getProduct().setStoreNickName(user.getNickName());
+		Date date= new Date();
+		laptopDto.getProduct().setDate(date);
+		
 		Product product = new Product();
 		Laptop laptop = new Laptop();
 		convertToEntity(product, laptop, laptopDto);
@@ -37,13 +49,16 @@ public class LaptopServiceImpl implements LaptopService{
 	}
 	
 	public void convertToEntity(Product product, Laptop laptop, LaptopDto laptopDto) {
-		product.setPrice(laptopDto.getPrice());
-		product.setDate(laptopDto.getDate());
-		Optional<UserAccount> store = uaRepository.findById(laptopDto.getStoreNickName());
+
+		product.setPrice(laptopDto.getProduct().getPrice());
+		product.setDate(laptopDto.getProduct().getDate());
+		uaRepository.findById(laptopDto.getProduct().getStoreNickName());
+		Optional<UserAccount> store = uaRepository.findById(laptopDto.getProduct().getStoreNickName());
 		product.setStore(store.get());
-		product.setFeatures(laptopDto.getFeatures());
-		product.setCategory(laptopDto.getCategory());
-		product.setUnits(laptopDto.getUnits());
+		product.setFeatures(laptopDto.getProduct().getFeatures());
+		product.setCategory(laptopDto.getProduct().getCategory());
+		product.setUnits(laptopDto.getProduct().getUnits());
+				
 		
 		laptop.setProduct(product);
 		laptop.setBrand(laptopDto.getBrand());
