@@ -22,7 +22,7 @@ public class ProductDto {
 		this.brand = brand;
 		this.model = model;
 		this.date = date;
-		StoreNickName = storeNickName;
+		this.storeNickName = storeNickName;
 		this.category = category;
 		this.features = features;
 		this.units = units;
@@ -45,7 +45,7 @@ public class ProductDto {
 	private Date date;
 	
 	@NotNull
-	private String StoreNickName;
+	private String storeNickName;
 	
 	@NotNull
 	private CategoryType category;

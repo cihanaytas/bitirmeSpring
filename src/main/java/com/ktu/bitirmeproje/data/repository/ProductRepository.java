@@ -11,5 +11,6 @@ public interface ProductRepository extends CrudRepository<Product, Long>{
 	
 	@Query("select p from Product p order by date desc")
 	public List<Product> getAllProduct();
+	
 
 }

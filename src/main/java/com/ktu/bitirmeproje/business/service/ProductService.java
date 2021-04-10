@@ -7,5 +7,7 @@ import com.ktu.bitirmeproje.business.dto.prod.ProductDto;
 public interface ProductService {
 	
 	public List<ProductDto> getAllProducts();
+	
+	public ProductDto getProduct(long productId);
 
 }

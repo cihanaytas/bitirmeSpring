@@ -2,6 +2,7 @@ package com.ktu.bitirmeproje.business.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,15 @@ public class ProductServiceImpl implements ProductService{
 		return listDto;
 	}
 	
+
+	@Override
+	public ProductDto getProduct(long productId) {
+		Optional<Product> product = productRepository.findById(productId);
+		ProductDto productDto = new ProductDto();
+		convertToDto(product.get(), productDto);
+		return productDto;
+	}
+	
 	
 	
 
@@ -50,5 +60,10 @@ public class ProductServiceImpl implements ProductService{
 		productDto.setUnits(product.getUnits());
 		
 	}
+
+
+
+
+
 
 }
