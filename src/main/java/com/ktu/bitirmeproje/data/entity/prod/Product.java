@@ -36,6 +36,10 @@ public class Product implements Serializable{
 	
 	private long price;
 	
+	private String brand;
+	
+	private String model;
+	
     @Temporal(TemporalType.TIMESTAMP)
 	private java.util.Date date;
     

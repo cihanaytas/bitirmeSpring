@@ -30,8 +30,6 @@ public class Television implements Serializable{
 	@OneToOne
 	@JoinColumn(name = "productID")
 	private Product product;
-	private String brand;	
-	private String model;	
 	private long inc;
 	@Enumerated(EnumType.STRING)
 	private ColorType color;

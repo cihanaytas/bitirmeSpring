@@ -34,8 +34,7 @@ public class Tablet implements Serializable{
 	private Product product;
 	@Enumerated(EnumType.STRING)
 	private PhoneType phonetype;
-	private String brand;
-	private String model;
+ 
 	private int RAMsize;
 	private int camMP;
 	private long memory;

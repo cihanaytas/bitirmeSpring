@@ -2,27 +2,26 @@ package com.ktu.bitirmeproje.business.dto.prod;
 
 
 import com.ktu.bitirmeproje.utils.ColorType;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 public class TelevisionDto {
 
 	private ProductDto product;
 	
- 
-	private String brand;	
-	private String model;	
+	private long televisinId;	
 	private long inc;
 	private ColorType color;
 	
 	
-	public TelevisionDto(ProductDto product, String brand, String model,
+	public TelevisionDto(ProductDto product,
 			long inc, ColorType color) {
 		this.product = product;
-		this.brand = brand;
-		this.model = model;
 		this.inc = inc;
 		this.color = color;
 	}

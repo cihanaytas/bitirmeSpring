@@ -58,11 +58,10 @@ public class LaptopServiceImpl implements LaptopService{
 		product.setFeatures(laptopDto.getProduct().getFeatures());
 		product.setCategory(laptopDto.getProduct().getCategory());
 		product.setUnits(laptopDto.getProduct().getUnits());
-				
+		product.setBrand(laptopDto.getProduct().getBrand());
+		product.setModel(laptopDto.getProduct().getModel());
 		
 		laptop.setProduct(product);
-		laptop.setBrand(laptopDto.getBrand());
-		laptop.setModel(laptopDto.getModel());
 		laptop.setRAMsize(laptopDto.getRAMsize());
 		laptop.setHDDsize(laptopDto.getHDDsize());
 		laptop.setProcessorType(laptopDto.getProcessorType());

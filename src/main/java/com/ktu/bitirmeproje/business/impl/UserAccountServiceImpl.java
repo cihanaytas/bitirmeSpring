@@ -101,7 +101,6 @@ public class UserAccountServiceImpl implements UserAccountService{
 		uaDto.setName(ua.getName());
 		uaDto.setSurname(ua.getSurname());
 		uaDto.setE_mail(ua.getE_mail());
-		uaDto.setPassword(ua.getPassword());
 		uaDto.setAddress(ua.getAddress());
 		uaDto.setRole(ua.getRole());
 	}

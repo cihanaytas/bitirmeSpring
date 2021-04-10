@@ -33,9 +33,7 @@ public class Laptop implements Serializable{
 	@OneToOne
 	@JoinColumn(name = "productID")
 	private Product product;
-	
-	private String brand;
-	private String model;
+
 	private int RAMsize;
 	private long HDDsize;
 	@Enumerated(EnumType.STRING)

@@ -4,20 +4,20 @@ package com.ktu.bitirmeproje.business.dto.prod;
 import com.ktu.bitirmeproje.utils.ColorType;
 import com.ktu.bitirmeproje.utils.PhoneType;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 public class TabletDto {
 
  
-	public TabletDto(ProductDto product, String brand, String model, int rAMsize, int camMP, long memory,
+	public TabletDto(ProductDto product, int rAMsize, int camMP, long memory,
 			ColorType color, PhoneType phoneType) {
 		
 		this.product = product;
-		this.brand = brand;
-		this.model = model;
 		RAMsize = rAMsize;
 		this.camMP = camMP;
 		this.memory = memory;
@@ -29,9 +29,7 @@ public class TabletDto {
 	private ProductDto product;
 	
 
-
-	private String brand;
-	private String model;
+	private long tabletId;;
 	private int RAMsize;
 	private int camMP;
 	private long memory;

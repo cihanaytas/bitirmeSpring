@@ -1,4 +1,4 @@
-package com.ktu.bitirmeproje.controllers.store.addproduct;
+package com.ktu.bitirmeproje.controllers;
 
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -14,9 +14,32 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductDto {
+	
+	public ProductDto(@NotNull long price, @NotNull String brand, @NotNull String model, @NotNull Date date,
+			@NotNull String storeNickName, @NotNull CategoryType category, @NotNull String features,
+			@NotNull int units) {
+		this.price = price;
+		this.brand = brand;
+		this.model = model;
+		this.date = date;
+		StoreNickName = storeNickName;
+		this.category = category;
+		this.features = features;
+		this.units = units;
+	}
+
+	private long id;
 
 	@NotNull
 	private long price;
+	
+	@NotNull
+	private String brand;
+
+	@NotNull
+	private String model;
+	
+	private String productName;
 	
 	@NotNull
 	private Date date;

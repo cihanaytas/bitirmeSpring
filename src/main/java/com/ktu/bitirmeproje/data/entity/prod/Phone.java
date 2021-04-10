@@ -32,10 +32,7 @@ public class Phone implements Serializable{
 	@OneToOne
 	@JoinColumn(name = "productID")
 	private Product product;
-	
-	
-	private String brand;	
-	private String model;	
+;	
 	private int RAMsize;	
 	private int camMP;
 	private long memory;

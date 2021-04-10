@@ -28,11 +28,11 @@ public class PhoneServiceImpl implements PhoneService{
 	@Autowired
 	private PhoneRepository phoneRepository;
 	
-	 @Autowired
-	 private ProductRepository productRepository;
+	@Autowired
+	private ProductRepository productRepository;
 	 
-		@Autowired
-		private UserByAuth uba;
+	@Autowired
+	private UserByAuth uba;
 	
 	@Override
 	public Phone save(PhoneDto phoneDto) {
@@ -65,10 +65,10 @@ public class PhoneServiceImpl implements PhoneService{
 		product.setFeatures(phoneDto.getProduct().getFeatures());
 		product.setCategory(phoneDto.getProduct().getCategory());
 		product.setUnits(phoneDto.getProduct().getUnits());
+		product.setBrand(phoneDto.getProduct().getBrand());
+		product.setModel(phoneDto.getProduct().getModel());
 		 
 		phone.setProduct(product);
-		phone.setBrand(phoneDto.getBrand());
-		phone.setModel(phoneDto.getModel());
 		phone.setRAMsize(phoneDto.getRAMsize());
 		phone.setCamMP(phoneDto.getCamMP());
 		phone.setMemory(phoneDto.getMemory());

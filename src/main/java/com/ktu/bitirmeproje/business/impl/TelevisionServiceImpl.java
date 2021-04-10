@@ -60,10 +60,10 @@ public class TelevisionServiceImpl implements TelevisionService{
 		product.setFeatures(tvDto.getProduct().getFeatures());
 		product.setCategory(tvDto.getProduct().getCategory());
 		product.setUnits(tvDto.getProduct().getUnits());
+		product.setBrand(tvDto.getProduct().getBrand());
+		product.setModel(tvDto.getProduct().getModel());
 		
 		tv.setProduct(product);
-		tv.setBrand(tvDto.getBrand());
-		tv.setModel(tvDto.getModel());
 		tv.setInc(tvDto.getInc());
 		tv.setColor(tvDto.getColor());
 	}

@@ -58,11 +58,11 @@ public class TabletServiceImpl implements TabletService{
 		product.setFeatures(tabletDto.getProduct().getFeatures());
 		product.setCategory(tabletDto.getProduct().getCategory());
 		product.setUnits(tabletDto.getProduct().getUnits());
+		product.setBrand(tabletDto.getProduct().getBrand());
+		product.setModel(tabletDto.getProduct().getModel());
 		
 		tablet.setProduct(product);
 		tablet.setPhonetype(tabletDto.getPhoneType());
-		tablet.setBrand(tabletDto.getBrand());
-		tablet.setModel(tabletDto.getModel());
 		tablet.setRAMsize(tabletDto.getRAMsize());
 		tablet.setCamMP(tabletDto.getCamMP());
 		tablet.setMemory(tabletDto.getMemory());
