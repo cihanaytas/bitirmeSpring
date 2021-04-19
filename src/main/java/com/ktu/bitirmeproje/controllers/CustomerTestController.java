@@ -11,7 +11,7 @@ public class CustomerTestController {
 	
 	@GetMapping("test")
 	public String ts() {
-		return "basarili";
+		return "aaaaaaaaaaaaaaaaaaaaaaaaa";
 	}
 	
 	@GetMapping("test/a")

@@ -31,9 +31,14 @@ public class LoginAndSignController {
 		return sonuc;
 	}
 
-	@PostMapping("/addcustomer")
-	public ResponseEntity<?> addCustomer(@Valid @RequestBody UserAccountDto customer) {
-		return uaService.save(customer);		  
+	@PostMapping("/adduser")
+	public ResponseEntity<?> addCustomer(@Valid @RequestBody UserAccountDto user) {
+		return uaService.save(user);		  
+	}
+	
+	@PostMapping("adduserdetail/{nickName}")
+	public void adddetail(@PathVariable("nickName") String nickName) {
+		uaService.adddetail(nickName);
 	}
 	
 	

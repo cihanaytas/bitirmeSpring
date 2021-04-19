@@ -1,9 +1,13 @@
 package com.ktu.bitirmeproje.business.dto.prod;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import com.ktu.bitirmeproje.data.entity.prod.PointsOfProduct;
 import com.ktu.bitirmeproje.utils.CategoryType;
 
 import lombok.AllArgsConstructor;
@@ -13,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDto {
+public class ProductDto implements Serializable{
 	
 	public ProductDto(@NotNull long price, @NotNull String brand, @NotNull String model, @NotNull Date date,
 			@NotNull String storeNickName, @NotNull CategoryType category, @NotNull String features,
@@ -38,13 +42,10 @@ public class ProductDto {
 
 	@NotNull
 	private String model;
+
 	
-	private String productName;
-	
-	@NotNull
 	private Date date;
-	
-	@NotNull
+		
 	private String storeNickName;
 	
 	@NotNull
@@ -55,5 +56,7 @@ public class ProductDto {
 	
 	@NotNull
 	private int units;
+	
+	//private List<PointsOfProduct> points = new ArrayList<PointsOfProduct>();
 	
 }

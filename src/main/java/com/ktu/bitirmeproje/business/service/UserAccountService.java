@@ -10,5 +10,6 @@ public interface UserAccountService {
 
 	public boolean login(ReqBodyLogin reqBody);
 	public ResponseEntity<?> save(UserAccountDto uaDto);
+	public void adddetail(String nickname);
 	public String getUserRole(String username);
 }

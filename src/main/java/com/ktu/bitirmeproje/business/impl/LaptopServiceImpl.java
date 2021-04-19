@@ -1,5 +1,6 @@
 package com.ktu.bitirmeproje.business.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
 
@@ -12,6 +13,7 @@ import com.ktu.bitirmeproje.business.dto.prod.LaptopDto;
 import com.ktu.bitirmeproje.business.service.LaptopService;
 import com.ktu.bitirmeproje.data.entity.UserAccount;
 import com.ktu.bitirmeproje.data.entity.prod.Laptop;
+import com.ktu.bitirmeproje.data.entity.prod.PointsOfProduct;
 import com.ktu.bitirmeproje.data.entity.prod.Product;
 import com.ktu.bitirmeproje.data.repository.LaptopRepository;
 import com.ktu.bitirmeproje.data.repository.ProductRepository;

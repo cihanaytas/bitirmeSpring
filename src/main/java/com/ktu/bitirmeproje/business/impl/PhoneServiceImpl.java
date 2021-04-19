@@ -35,7 +35,7 @@ public class PhoneServiceImpl implements PhoneService{
 	private UserByAuth uba;
 	
 	@Override
-	public Phone save(PhoneDto phoneDto) {
+	public Product save(PhoneDto phoneDto) {
 
 		UserAccount user = uba.getUserByAuth();
 		
@@ -49,10 +49,10 @@ public class PhoneServiceImpl implements PhoneService{
 			
 		converToEntity(product, phone, phoneDto);
 		//System.out.println(phone);
-		productRepository.save(product);
+		
 		phoneRepository.save(phone);
 	 
-		return null;
+		return productRepository.save(product);
 	}
 
 	

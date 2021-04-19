@@ -1,5 +1,7 @@
 package com.ktu.bitirmeproje.business.impl;
 
+import java.util.Optional;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service; 
 import com.ktu.bitirmeproje.business.dto.UserAccountDto;
 import com.ktu.bitirmeproje.business.service.UserAccountService;
+import com.ktu.bitirmeproje.data.entity.StoreDetails;
 import com.ktu.bitirmeproje.data.entity.UserAccount;
+import com.ktu.bitirmeproje.data.repository.CustomerRepository;
+import com.ktu.bitirmeproje.data.repository.StoreRepository;
 import com.ktu.bitirmeproje.data.repository.UserAccountRepository;
 import com.ktu.bitirmeproje.exception.ErrorDetails;
 import com.ktu.bitirmeproje.utils.ReqBodyLogin;
@@ -20,7 +25,11 @@ public class UserAccountServiceImpl implements UserAccountService{
 	@Autowired
 	private UserAccountRepository uaRepository;
 	
+	@Autowired
+	private StoreRepository storeRep;
 	
+	@Autowired
+	private CustomerRepository customerRep;
 	
 	
 	public boolean login(ReqBodyLogin reqBody) {
@@ -59,9 +68,14 @@ public class UserAccountServiceImpl implements UserAccountService{
 						.body(err);
 			}
 			
+
+			
 			
 			UserAccount ua = new UserAccount();
 			convertToEntity(ua, uaDto);
+
+			
+			
 			return ResponseEntity.ok(uaRepository.save(ua));
 					
 		}
@@ -70,6 +84,20 @@ public class UserAccountServiceImpl implements UserAccountService{
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	@Override
+	public void adddetail(String nickname) {
+		Optional<UserAccount> user = uaRepository.findById(nickname);
+		if(user.get().getRole().toString().equals("STORE")) {
+			StoreDetails store = new StoreDetails();
+			store.setStore(user.get());
+			storeRep.save(store);
+		}
+		else if(user.get().getRole().toString().equals("CUSTOMER")) {
+			
+		}
+		
 	}
 	
 
@@ -104,6 +132,10 @@ public class UserAccountServiceImpl implements UserAccountService{
 		uaDto.setAddress(ua.getAddress());
 		uaDto.setRole(ua.getRole());
 	}
+
+
+
+
 
 
 

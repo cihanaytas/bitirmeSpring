@@ -8,6 +8,10 @@ public interface ProductService {
 	
 	public List<ProductDto> getAllProducts();
 	
+	public List<ProductDto> getAllProductByNickname(String nickName);
+	
 	public ProductDto getProduct(long productId);
+	
+	public void pointProduct(long productId, double point);
 
 }

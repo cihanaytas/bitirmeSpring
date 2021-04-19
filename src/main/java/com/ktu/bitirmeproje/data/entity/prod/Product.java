@@ -1,7 +1,8 @@
 package com.ktu.bitirmeproje.data.entity.prod;
 
 import java.io.Serializable;
- 
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -14,8 +15,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
 import com.ktu.bitirmeproje.data.entity.UserAccount;
 import com.ktu.bitirmeproje.utils.CategoryType;
 
@@ -43,7 +48,7 @@ public class Product implements Serializable{
     @Temporal(TemporalType.TIMESTAMP)
 	private java.util.Date date;
     
-    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "nickName")
     private UserAccount store;
     
@@ -54,6 +59,14 @@ public class Product implements Serializable{
     private String features;
     
     private int units;
+    
+    @OneToMany(targetEntity = PointsOfProduct.class, cascade = CascadeType.ALL)
+    @JoinColumn(name="productId")
+    private List<PointsOfProduct> points = new ArrayList<PointsOfProduct>();
+    
+//    
+//    @OneToMany(mappedBy = "product")
+//    private List<PointsOfProduct> points;
 
 	
     

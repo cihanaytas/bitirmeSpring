@@ -17,6 +17,8 @@ import com.ktu.bitirmeproje.business.service.LaptopService;
 import com.ktu.bitirmeproje.business.service.PhoneService;
 import com.ktu.bitirmeproje.business.service.TabletService;
 import com.ktu.bitirmeproje.business.service.TelevisionService;
+import com.ktu.bitirmeproje.data.entity.prod.Phone;
+import com.ktu.bitirmeproje.data.entity.prod.Product;
 
 
 @RestController
@@ -59,9 +61,8 @@ public class StoreProductController {
 	
 	
 	@PostMapping("/addphone")
-	public String addphone(@Valid @RequestBody PhoneDto phone) {
-		phoneService.save(phone);
-		return "a";
+	public Product addphone(@Valid @RequestBody PhoneDto phone) {
+		return phoneService.save(phone);
 	}
 	
 	@PostMapping("/addtv")
