@@ -1,6 +1,7 @@
 package com.ktu.bitirmeproje.business.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,8 +13,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.ktu.bitirmeproje.business.dto.prod.ProductDto;
 import com.ktu.bitirmeproje.business.service.ProductService;
 import com.ktu.bitirmeproje.data.entity.UserAccount;
+import com.ktu.bitirmeproje.data.entity.prod.HeadPhone;
 import com.ktu.bitirmeproje.data.entity.prod.PointsOfProduct;
 import com.ktu.bitirmeproje.data.entity.prod.Product;
+import com.ktu.bitirmeproje.data.entity.prod.ProductImages;
+import com.ktu.bitirmeproje.data.repository.PointsOfProductRepository;
+import com.ktu.bitirmeproje.data.repository.ProductImagesRepository;
 import com.ktu.bitirmeproje.data.repository.ProductRepository;
 import com.ktu.bitirmeproje.data.repository.UserAccountRepository;
 import com.ktu.bitirmeproje.utils.CategoryType;
@@ -30,6 +35,31 @@ public class ProductServiceImpl implements ProductService{
 	
 	@Autowired
 	private UserByAuth uba;
+
+	@Autowired
+	private UserAccountRepository uaRepository;
+	
+	@Autowired
+	private PointsOfProductRepository popRep;
+	
+	@Autowired
+	private ProductImagesRepository piRep;
+	
+	@Override
+	public void addProduct(ProductDto productDto) {
+
+		UserAccount user = uba.getUserByAuth();
+		productDto.setStoreNickName(user.getNickName()); //ürünü ekleyen kullanıcı belirlendi 
+		
+		Date date= new Date();
+		productDto.setDate(date); //tarih setlendi
+		
+		Product product = new Product();
+		convertToEntity(product,productDto);
+		
+		productRepository.save(product);
+		
+	}
 	
 
 	@Override
@@ -39,9 +69,9 @@ public class ProductServiceImpl implements ProductService{
 		
 		for(Product product : list) {
 			ProductDto productDto = new ProductDto();
-			ModelMapper modelMapper = new ModelMapper();
-	 		productDto = modelMapper.map(product, ProductDto.class);
-			//convertToDto(product, productDto);
+			//ModelMapper modelMapper = new ModelMapper();
+	 		//productDto = modelMapper.map(product, ProductDto.class);
+			convertToDto(product, productDto);
 			listDto.add(productDto);
 		}
 
@@ -57,9 +87,9 @@ public class ProductServiceImpl implements ProductService{
 		
 		for(Product product : list) {
 			ProductDto productDto = new ProductDto();
-			ModelMapper modelMapper = new ModelMapper();
-	 		productDto = modelMapper.map(product, ProductDto.class);
-			//convertToDto(product, productDto);
+			//ModelMapper modelMapper = new ModelMapper();
+	 		//productDto = modelMapper.map(product, ProductDto.class);
+			convertToDto(product, productDto);
 			listDto.add(productDto);
 		}
 
@@ -71,9 +101,9 @@ public class ProductServiceImpl implements ProductService{
 	public ProductDto getProduct(long productId) {
 		Optional<Product> product = productRepository.findById(productId);
 		ProductDto productDto = new ProductDto();
-		ModelMapper modelMapper = new ModelMapper();
- 		productDto = modelMapper.map(product.get(), ProductDto.class);
-		//convertToDto(product.get(), productDto);
+		//ModelMapper modelMapper = new ModelMapper();
+ 		//productDto = modelMapper.map(product.get(), ProductDto.class);
+		convertToDto(product.get(), productDto);
 		return productDto;
 	}
 	
@@ -106,9 +136,36 @@ public class ProductServiceImpl implements ProductService{
 		productDto.setCategory(product.getCategory());
 		productDto.setFeatures(product.getFeatures());
 		productDto.setUnits(product.getUnits());
- 		//productDto.setPoints(product.getPoints());
- 		
+
+		Iterable<PointsOfProduct> pointList = popRep.getPointList(product);
+		List<Double> plist = new ArrayList<Double>();
+		for(PointsOfProduct p : pointList) {
+			plist.add(p.getPoint());
+		}	
+		productDto.setPoints(plist);
+		
+		Iterable<ProductImages> imageList = piRep.getImageList(product);
+		List<String> ilist = new ArrayList<String>();
+		for(ProductImages i : imageList) {
+			ilist.add(i.getImageUri());
+		}	
+		productDto.setImages(ilist);
+		
  		}
+
+	
+	private void convertToEntity(Product product, ProductDto productDto) {
+		product.setPrice(productDto.getPrice());
+		product.setBrand(productDto.getBrand());
+		product.setModel(productDto.getModel());
+		Optional<UserAccount> store = uaRepository.findById(productDto.getStoreNickName());
+		product.setStore(store.get());	
+		product.setFeatures(productDto.getFeatures());
+		product.setCategory(productDto.getCategory());
+		product.setUnits(productDto.getUnits());
+		product.setDate(productDto.getDate());
+	}
+
 
 
 

@@ -1,15 +1,10 @@
 package com.ktu.bitirmeproje.business.dto.prod;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import javax.validation.constraints.NotNull;
-
-import com.ktu.bitirmeproje.data.entity.prod.PointsOfProduct;
 import com.ktu.bitirmeproje.utils.CategoryType;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +14,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductDto implements Serializable{
 	
+
+	private static final long serialVersionUID = 1L;
+
 	public ProductDto(@NotNull long price, @NotNull String brand, @NotNull String model, @NotNull Date date,
 			@NotNull String storeNickName, @NotNull CategoryType category, @NotNull String features,
 			@NotNull int units) {
@@ -58,5 +56,9 @@ public class ProductDto implements Serializable{
 	private int units;
 	
 	//private List<PointsOfProduct> points = new ArrayList<PointsOfProduct>();
+	
+	private List<Double> points;
+	
+	private List<String> images;
 	
 }

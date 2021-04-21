@@ -14,4 +14,5 @@ public interface ProductService {
 	
 	public void pointProduct(long productId, double point);
 
+	public void addProduct(ProductDto productDto);
 }

@@ -10,11 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ktu.bitirmeproje.business.dto.prod.HeadPhoneDto;
 import com.ktu.bitirmeproje.business.dto.prod.LaptopDto;
 import com.ktu.bitirmeproje.business.dto.prod.PhoneDto;
+import com.ktu.bitirmeproje.business.dto.prod.ProductDto;
 import com.ktu.bitirmeproje.business.dto.prod.TabletDto;
 import com.ktu.bitirmeproje.business.dto.prod.TelevisionDto;
 import com.ktu.bitirmeproje.business.service.HeadPhoneService;
 import com.ktu.bitirmeproje.business.service.LaptopService;
 import com.ktu.bitirmeproje.business.service.PhoneService;
+import com.ktu.bitirmeproje.business.service.ProductService;
 import com.ktu.bitirmeproje.business.service.TabletService;
 import com.ktu.bitirmeproje.business.service.TelevisionService;
 import com.ktu.bitirmeproje.data.entity.prod.Phone;
@@ -41,7 +43,9 @@ public class StoreProductController {
 	@Autowired
 	private HeadPhoneService hpService;
 
-
+	@Autowired
+	private ProductService productService;
+	
 	
 	
 	@PostMapping("/addlaptop")
@@ -78,6 +82,11 @@ public class StoreProductController {
 	}
 	
 	
+	@PostMapping("/addproduct")
+	public String addProduct(@Valid @RequestBody ProductDto productDto) {
+		productService.addProduct(productDto);
+		return "a";
+	}
 	
 	
 }
