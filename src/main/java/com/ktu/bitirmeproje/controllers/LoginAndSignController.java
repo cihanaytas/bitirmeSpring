@@ -26,7 +26,6 @@ public class LoginAndSignController {
 	
 	@PostMapping("/login")
 	public boolean login(@RequestBody ReqBodyLogin reqBody)  {
-
 		boolean sonuc = uaService.login(reqBody);
 		return sonuc;
 	}

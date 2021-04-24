@@ -62,7 +62,7 @@ public class Product implements Serializable{
     @JoinColumn(name= "productId")
     private List<ProductImages> images = new ArrayList<ProductImages>();
     
-    
+   
 //    
 //    @OneToMany(mappedBy = "product")
 //    private List<PointsOfProduct> points;

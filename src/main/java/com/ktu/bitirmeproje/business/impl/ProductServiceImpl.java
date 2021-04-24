@@ -1,10 +1,13 @@
 package com.ktu.bitirmeproje.business.impl;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.mapping.Any;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,7 +50,6 @@ public class ProductServiceImpl implements ProductService{
 	
 	@Override
 	public void addProduct(ProductDto productDto) {
-
 		UserAccount user = uba.getUserByAuth();
 		productDto.setStoreNickName(user.getNickName()); //ürünü ekleyen kullanıcı belirlendi 
 		
@@ -56,6 +58,7 @@ public class ProductServiceImpl implements ProductService{
 		
 		Product product = new Product();
 		convertToEntity(product,productDto);
+		
 		
 		productRepository.save(product);
 		
@@ -151,6 +154,11 @@ public class ProductServiceImpl implements ProductService{
 		}	
 		productDto.setImages(ilist);
 		
+		
+ 
+		
+		
+		
  		}
 
 	
@@ -164,6 +172,18 @@ public class ProductServiceImpl implements ProductService{
 		product.setCategory(productDto.getCategory());
 		product.setUnits(productDto.getUnits());
 		product.setDate(productDto.getDate());
+		
+
+		for(String uri:productDto.getImages()) {
+			ProductImages image = new ProductImages();
+			image.setProduct(product);
+			image.setImageUri(uri);
+			product.getImages().add(image);
+		}
+		
+		
+		
+		
 	}
 
 
