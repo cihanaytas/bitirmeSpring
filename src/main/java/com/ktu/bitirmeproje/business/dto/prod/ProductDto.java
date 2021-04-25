@@ -1,15 +1,9 @@
 package com.ktu.bitirmeproje.business.dto.prod;
 
 import java.io.Serializable;
-import java.net.URI;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.mapping.Any;
-
 import com.ktu.bitirmeproje.utils.CategoryType;
 import lombok.AllArgsConstructor;
 import lombok.Data;

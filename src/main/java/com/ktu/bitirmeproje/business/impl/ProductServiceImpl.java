@@ -6,20 +6,22 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-
 import org.hibernate.mapping.Any;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
-
 import com.ktu.bitirmeproje.business.dto.prod.ProductDto;
 import com.ktu.bitirmeproje.business.service.ProductService;
 import com.ktu.bitirmeproje.data.entity.UserAccount;
-import com.ktu.bitirmeproje.data.entity.prod.HeadPhone;
 import com.ktu.bitirmeproje.data.entity.prod.PointsOfProduct;
 import com.ktu.bitirmeproje.data.entity.prod.Product;
 import com.ktu.bitirmeproje.data.entity.prod.ProductImages;
+import com.ktu.bitirmeproje.data.repository.MyProductRepository;
 import com.ktu.bitirmeproje.data.repository.PointsOfProductRepository;
 import com.ktu.bitirmeproje.data.repository.ProductImagesRepository;
 import com.ktu.bitirmeproje.data.repository.ProductRepository;
@@ -47,6 +49,9 @@ public class ProductServiceImpl implements ProductService{
 	
 	@Autowired
 	private ProductImagesRepository piRep;
+	
+	@Autowired
+	private MyProductRepository proRep;
 	
 	@Override
 	public void addProduct(ProductDto productDto) {
@@ -125,7 +130,31 @@ public class ProductServiceImpl implements ProductService{
 		productRepository.save(product);		
 	}
 	
+	@Override
+    public List<ProductDto> getAllEmployees(Integer pageNo, Integer pageSize, String sortBy)
+    {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
+ 
+        Page<Product> pagedResult = proRep.findAll(paging);
+        
+         
+        if(pagedResult.hasContent()) {
+        	List<Product> list = pagedResult.getContent();
+    		List<ProductDto> listDto = new ArrayList<>();	
+    		for(Product product : list) {
+    			ProductDto productDto = new ProductDto();
+    			convertToDto(product, productDto);
+    			listDto.add(productDto);
+    		}
+            return listDto;
+        } else {
+            return new ArrayList<ProductDto>();
+        }
+    }
 	
+
+
+
 	
 
 	
@@ -185,6 +214,7 @@ public class ProductServiceImpl implements ProductService{
 		
 		
 	}
+
 
 
 

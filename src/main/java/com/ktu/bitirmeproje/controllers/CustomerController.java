@@ -2,26 +2,28 @@ package com.ktu.bitirmeproje.controllers;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.ktu.bitirmeproje.business.dto.StoreDto;
 import com.ktu.bitirmeproje.business.dto.prod.ProductDto;
 import com.ktu.bitirmeproje.business.service.ProductService;
 import com.ktu.bitirmeproje.data.entity.StoreDetails;
 import com.ktu.bitirmeproje.data.entity.StorePoints;
 import com.ktu.bitirmeproje.data.entity.UserAccount;
-import com.ktu.bitirmeproje.data.entity.prod.PointsOfProduct;
-import com.ktu.bitirmeproje.data.entity.prod.Product;
-import com.ktu.bitirmeproje.data.repository.ProductRepository;
+import com.ktu.bitirmeproje.data.entity.prod.*;
+import com.ktu.bitirmeproje.data.repository.MyProductRepository;
 import com.ktu.bitirmeproje.data.repository.StoreRepository;
 import com.ktu.bitirmeproje.data.repository.UserAccountRepository;
-import com.ktu.bitirmeproje.utils.UserByAuth;
-
 
 @RestController
 public class CustomerController {
@@ -30,16 +32,14 @@ public class CustomerController {
 	private ProductService productService;
 	
 	@Autowired
-	private ProductRepository prep;
-	
-	@Autowired
-	private UserByAuth uba;
-	
-	@Autowired
 	private StoreRepository srep;
 	
 	@Autowired
 	private UserAccountRepository urep;
+	
+	@Autowired
+	private MyProductRepository proRep;
+
 	
 	@GetMapping("customer/products")
 	public List<ProductDto> getAllProduct(){
@@ -71,7 +71,6 @@ public class CustomerController {
 	public StoreDto getStoreDetail(@PathVariable(name="storeNickName") String storeNickName) {
 		Optional<UserAccount> store = urep.findById(storeNickName);
 		StoreDetails storeDetail = srep.getStoreDetail(store.get());
-System.out.println("geledim");
 		StoreDto sdto = new StoreDto();
 		sdto.setStore(store.get());
 		List<StorePoints> list = storeDetail.getPoints();
@@ -89,25 +88,17 @@ System.out.println("geledim");
 
 	}
 	
+	@GetMapping("customer/plist/{page}")
+	public ResponseEntity<List<ProductDto>> getplist(@PathVariable(name="page") Integer page) {
+		 List<ProductDto> list = productService.getAllEmployees(page, 10, "date");
+
+	        return new ResponseEntity<List<ProductDto>>(list, new HttpHeaders(), HttpStatus.OK);
+	}
+	
+
 	
 	
-//	@GetMapping("customer/storegor")
-//	public Product aasfas() {
-////		Optional<StoreDetails> s =  srep.findById((long) 3);
-////		StoreDetails store = s.get();
-//		
-//		Optional<Product> s =  prep.findById((long) 4);
-//		Product store = s.get();
-//
-//		List<PointsOfProduct> list = store.getPoints();
-//		
-//		for(int i : list) {
-//			System.out.println(list.get(0).getPoint());
-//		}
-//
-//		return store;
-//	}
-//	
+
 	
 	
 	
