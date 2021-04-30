@@ -16,12 +16,17 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.springframework.data.elasticsearch.annotations.Document;
+
 import com.ktu.bitirmeproje.data.entity.UserAccount;
 import com.ktu.bitirmeproje.utils.CategoryType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+//@Document(indexName = "product")
 @Entity
 @Data
 @AllArgsConstructor
@@ -46,8 +51,7 @@ public class Product implements Serializable{
     @JoinColumn(name = "nickName")
     private UserAccount store;
     
-    @Enumerated(EnumType.STRING)
-    private CategoryType category;
+    private String category;
     
     @Lob
     private String features;

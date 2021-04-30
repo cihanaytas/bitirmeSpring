@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service; 
 import com.ktu.bitirmeproje.business.dto.UserAccountDto;
 import com.ktu.bitirmeproje.business.service.UserAccountService;
+import com.ktu.bitirmeproje.data.entity.CustomerDetails;
 import com.ktu.bitirmeproje.data.entity.StoreDetails;
 import com.ktu.bitirmeproje.data.entity.UserAccount;
 import com.ktu.bitirmeproje.data.repository.CustomerRepository;
@@ -95,7 +96,9 @@ public class UserAccountServiceImpl implements UserAccountService{
 			storeRep.save(store);
 		}
 		else if(user.get().getRole().toString().equals("CUSTOMER")) {
-			
+			CustomerDetails customer = new CustomerDetails();
+			customer.setCustomer(user.get());
+			customerRep.save(customer);	
 		}
 		
 	}

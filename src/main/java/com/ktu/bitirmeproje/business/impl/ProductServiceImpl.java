@@ -131,13 +131,24 @@ public class ProductServiceImpl implements ProductService{
 	}
 	
 	@Override
-    public List<ProductDto> getAllEmployees(Integer pageNo, Integer pageSize, String sortBy)
+    public List<ProductDto> getAllProducts(Integer pageNo, Integer pageSize, String sortBy)
     {
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
  
         Page<Product> pagedResult = proRep.findAll(paging);
-        
-         
+
+        return returnProduct(pagedResult);
+    }
+	
+	@Override
+	public List<ProductDto> getAllProductByCategory(Integer pageNo, Integer pageSize, String sortBy,String category) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
+        Page<Product> pagedResult = proRep.findAllByCategory(category, paging);
+      
+        return returnProduct(pagedResult);
+	}
+	
+	public List<ProductDto> returnProduct(Page<Product> pagedResult){
         if(pagedResult.hasContent()) {
         	List<Product> list = pagedResult.getContent();
     		List<ProductDto> listDto = new ArrayList<>();	
@@ -150,8 +161,7 @@ public class ProductServiceImpl implements ProductService{
         } else {
             return new ArrayList<ProductDto>();
         }
-    }
-	
+	}
 
 
 
@@ -165,7 +175,7 @@ public class ProductServiceImpl implements ProductService{
 		productDto.setModel(product.getModel());
 		productDto.setDate(product.getDate());
 		productDto.setStoreNickName(product.getStore().getNickName());
-		productDto.setCategory(product.getCategory());
+		productDto.setCategory(CategoryType.valueOf(product.getCategory()));
 		productDto.setFeatures(product.getFeatures());
 		productDto.setUnits(product.getUnits());
 
@@ -198,7 +208,7 @@ public class ProductServiceImpl implements ProductService{
 		Optional<UserAccount> store = uaRepository.findById(productDto.getStoreNickName());
 		product.setStore(store.get());	
 		product.setFeatures(productDto.getFeatures());
-		product.setCategory(productDto.getCategory());
+		product.setCategory(productDto.getCategory().toString());
 		product.setUnits(productDto.getUnits());
 		product.setDate(productDto.getDate());
 		
@@ -214,6 +224,9 @@ public class ProductServiceImpl implements ProductService{
 		
 		
 	}
+
+
+
 
 
 

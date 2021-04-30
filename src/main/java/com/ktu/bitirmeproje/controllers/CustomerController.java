@@ -1,5 +1,6 @@
 package com.ktu.bitirmeproje.controllers;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +14,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.ktu.bitirmeproje.business.dto.StoreDto;
+import com.ktu.bitirmeproje.business.dto.prod.CartsProductsDto;
 import com.ktu.bitirmeproje.business.dto.prod.ProductDto;
+import com.ktu.bitirmeproje.business.service.CustomerService;
 import com.ktu.bitirmeproje.business.service.ProductService;
+import com.ktu.bitirmeproje.data.entity.CustomerDetails;
 import com.ktu.bitirmeproje.data.entity.StoreDetails;
 import com.ktu.bitirmeproje.data.entity.StorePoints;
 import com.ktu.bitirmeproje.data.entity.UserAccount;
 import com.ktu.bitirmeproje.data.entity.prod.*;
+import com.ktu.bitirmeproje.data.repository.CustomerRepository;
 import com.ktu.bitirmeproje.data.repository.MyProductRepository;
 import com.ktu.bitirmeproje.data.repository.StoreRepository;
 import com.ktu.bitirmeproje.data.repository.UserAccountRepository;
@@ -39,6 +45,9 @@ public class CustomerController {
 	
 	@Autowired
 	private MyProductRepository proRep;
+	
+	@Autowired
+	private CustomerService customerService;
 
 	
 	@GetMapping("customer/products")
@@ -90,10 +99,29 @@ public class CustomerController {
 	
 	@GetMapping("customer/plist/{page}")
 	public ResponseEntity<List<ProductDto>> getplist(@PathVariable(name="page") Integer page) {
-		 List<ProductDto> list = productService.getAllEmployees(page, 10, "date");
+		 List<ProductDto> list = productService.getAllProducts(page, 10, "date");
 
 	        return new ResponseEntity<List<ProductDto>>(list, new HttpHeaders(), HttpStatus.OK);
 	}
+	
+	
+	@GetMapping("customer/plist/{category}/{page}")
+	public ResponseEntity<List<ProductDto>> getphonelist(@PathVariable(name="page") Integer page,@PathVariable(name="category") String category) {
+		 List<ProductDto> list = productService.getAllProductByCategory(page, 10, "date",category);
+
+	     return new ResponseEntity<List<ProductDto>>(list, new HttpHeaders(), HttpStatus.OK);
+	}
+	
+
+	
+	@PostMapping("customer/sales")
+	public String sales(@RequestBody List<CartsProductsDto> cartList) {
+		customerService.sales(cartList);
+
+		return "a";
+	}
+	
+ 
 	
 
 	

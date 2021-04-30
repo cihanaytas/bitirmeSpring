@@ -17,6 +17,8 @@ public interface ProductService {
 
 	public void addProduct(ProductDto productDto);
 	
-    public List<ProductDto> getAllEmployees(Integer pageNo, Integer pageSize, String sortBy);
+    public List<ProductDto> getAllProducts(Integer pageNo, Integer pageSize, String sortBy);
+    
+    public List<ProductDto> getAllProductByCategory(Integer pageNo, Integer pageSize, String sortBy,String category);
 
 }
