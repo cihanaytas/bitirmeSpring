@@ -58,16 +58,51 @@ public class ProductServiceImpl implements ProductService{
 		UserAccount user = uba.getUserByAuth();
 		productDto.setStoreNickName(user.getNickName()); //ürünü ekleyen kullanıcı belirlendi 
 		
+		if(productRepository.isExist(user, productDto.getBrand(), productDto.getModel())!=0) {
+			System.out.println("eklenmedi");
+		}
+		
+		else {
+			Date date= new Date();
+			productDto.setDate(date); //tarih setlendi
+			
+			Product product = new Product();
+			convertToEntity(product,productDto);
+			
+			productRepository.save(product);
+		}
+				
+	}
+	
+
+	@Override
+	public void updateProduct(long productId,ProductDto productDto) {
+		UserAccount user = uba.getUserByAuth();
+		productDto.setStoreNickName(user.getNickName());
+		Optional<Product> p = productRepository.findById(productId);
+		Product product = p.get();
+		List<String> imageListString = new ArrayList<String>();
+		for(ProductImages image : product.getImages()) {
+			imageListString.add(image.getImageUri());
+		}
+		List<String> union = new ArrayList<String>(imageListString);
+		union.addAll(productDto.getImages());
+		System.out.println(union);
+		List<String> intersection = new ArrayList<String>(imageListString);
+		intersection.retainAll(productDto.getImages());
+		union.removeAll(intersection);
+		
+		productDto.setImages(union);
+
+		
 		Date date= new Date();
-		productDto.setDate(date); //tarih setlendi
-		
-		Product product = new Product();
-		convertToEntity(product,productDto);
-		
-		
+		productDto.setDate(date);
+		convertToEntity(product, productDto);
 		productRepository.save(product);
 		
 	}
+
+
 	
 
 	@Override
@@ -162,6 +197,16 @@ public class ProductServiceImpl implements ProductService{
             return new ArrayList<ProductDto>();
         }
 	}
+	
+	
+	@Override
+	public List<ProductDto> getAllProductByStore(Integer pageNo, Integer pageSize) {
+		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by("date").descending());
+		UserAccount store = uba.getUserByAuth();
+	    Page<Product> pagedResult = proRep.findAllByStore(paging, store);
+	    
+	    return returnProduct(pagedResult);
+	}
 
 
 
@@ -201,7 +246,7 @@ public class ProductServiceImpl implements ProductService{
  		}
 
 	
-	private void convertToEntity(Product product, ProductDto productDto) {
+	private void convertToEntity(Product product, ProductDto productDto) { 
 		product.setPrice(productDto.getPrice());
 		product.setBrand(productDto.getBrand());
 		product.setModel(productDto.getModel());
@@ -212,18 +257,24 @@ public class ProductServiceImpl implements ProductService{
 		product.setUnits(productDto.getUnits());
 		product.setDate(productDto.getDate());
 		
-
+		//List<ProductImages> listImages = new ArrayList<ProductImages>();
 		for(String uri:productDto.getImages()) {
 			ProductImages image = new ProductImages();
 			image.setProduct(product);
 			image.setImageUri(uri);
+			//listImages.add(image);
 			product.getImages().add(image);
 		}
+
+		//product.setImages(listImages);
 		
 		
 		
 		
 	}
+
+
+
 
 
 

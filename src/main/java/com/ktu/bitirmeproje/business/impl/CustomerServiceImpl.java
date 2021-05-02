@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
-import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ktu.bitirmeproje.business.dto.prod.CartsProductsDto;
@@ -44,13 +42,18 @@ public class CustomerServiceImpl implements CustomerService{
 		Date date = new Date();
 		shopping.setDate(date);
 		shopping.setCustomer(customer);
-				
+		
+		double totalPrice = 0;
+					
 		List<CartsProducts> cartList = new ArrayList<CartsProducts>();
 		for(CartsProductsDto cartDto : cartListDto) {
 			CartsProducts cart = new CartsProducts();
+			totalPrice+= cartDto.getPrice() * cartDto.getQuantity();
 			converToEntityCartProducts(cart, cartDto);
 			cartList.add(cart);
-		}		
+		}
+		
+		shopping.setTotalPrice(totalPrice);
 
 		
 		for(CartsProducts cart : cartList) {

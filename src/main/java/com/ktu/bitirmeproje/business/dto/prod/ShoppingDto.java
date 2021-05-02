@@ -14,4 +14,5 @@ public class ShoppingDto {
 	private long id;
 	private String customerNickName;
 	private Date date;
+	private double totalPrice;
 }

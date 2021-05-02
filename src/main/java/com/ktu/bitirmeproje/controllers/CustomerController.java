@@ -1,13 +1,8 @@
 package com.ktu.bitirmeproje.controllers;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ktu.bitirmeproje.business.dto.StoreDto;
 import com.ktu.bitirmeproje.business.dto.prod.CartsProductsDto;
 import com.ktu.bitirmeproje.business.dto.prod.ProductDto;
+import com.ktu.bitirmeproje.business.dto.prod.ShoppingDto;
 import com.ktu.bitirmeproje.business.service.CustomerService;
 import com.ktu.bitirmeproje.business.service.ProductService;
-import com.ktu.bitirmeproje.data.entity.CustomerDetails;
+import com.ktu.bitirmeproje.business.service.ShoppingService;
 import com.ktu.bitirmeproje.data.entity.StoreDetails;
 import com.ktu.bitirmeproje.data.entity.StorePoints;
 import com.ktu.bitirmeproje.data.entity.UserAccount;
-import com.ktu.bitirmeproje.data.entity.prod.*;
-import com.ktu.bitirmeproje.data.repository.CustomerRepository;
-import com.ktu.bitirmeproje.data.repository.MyProductRepository;
 import com.ktu.bitirmeproje.data.repository.StoreRepository;
 import com.ktu.bitirmeproje.data.repository.UserAccountRepository;
 
@@ -44,10 +37,10 @@ public class CustomerController {
 	private UserAccountRepository urep;
 	
 	@Autowired
-	private MyProductRepository proRep;
+	private CustomerService customerService;
 	
 	@Autowired
-	private CustomerService customerService;
+	private ShoppingService shopService;
 
 	
 	@GetMapping("customer/products")
@@ -120,6 +113,14 @@ public class CustomerController {
 
 		return "a";
 	}
+	
+	
+	@GetMapping("customer/shoppinglist")
+	public List<ShoppingDto> getShoppingList(){
+		return shopService.getShoppingList();
+	}
+	
+	
 	
  
 	

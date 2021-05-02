@@ -17,5 +17,7 @@ public interface ProductRepository extends CrudRepository<Product, Long>{
 	@Query("select p from Product p where p.store= :store  order by date desc")
 	public List<Product> getAllProductByNickname(@Param("store") UserAccount store);
 	
+	@Query("select count(*) from Product p where p.store= :store and p.brand= :brand and p.model= :model")
+	public int isExist(@Param("store") UserAccount store, @Param("brand") String brand, @Param("model") String model);
 
 }
