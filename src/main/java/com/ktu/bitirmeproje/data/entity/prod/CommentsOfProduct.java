@@ -1,6 +1,7 @@
 package com.ktu.bitirmeproje.data.entity.prod;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -44,4 +45,6 @@ public class CommentsOfProduct implements Serializable {
 	
 	@Lob
 	private String comment;
+	
+	private Date date;
 }

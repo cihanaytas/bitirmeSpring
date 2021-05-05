@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -219,17 +222,36 @@ public class ProductServiceImpl implements ProductService{
 	
 	
 	@Override
-	public void addComment(CommentProductDto commentDto) {
+	@Transactional
+	public boolean addComment(CommentProductDto commentDto) {
+		CommentsOfProduct comment0 = copRep.findById(commentDto.getId()).orElse(null);
+		
+		if(comment0!=null) {
+			Date date = new Date();
+			comment0.setDate(date);
+			comment0.setComment(commentDto.getComment());
+			return true;
+			
+		}
+		else {
 		UserAccount user = uba.getUserByAuth();
 		Optional<Product> p = productRepository.findById(commentDto.getProductId());
 		Product product = p.get();
 		CommentsOfProduct comment = new CommentsOfProduct();
 		convertToEntity(comment, commentDto);
 		comment.setUser(user);
+		Date date = new Date();
+		comment.setDate(date);
  
 		product.getComments().add(comment);
 		
-		productRepository.save(product);	
+		if(productRepository.save(product) != null)
+			return true;
+		else
+			return false;
+		}
+		
+
 		
 	}
 	
@@ -243,14 +265,23 @@ public class ProductServiceImpl implements ProductService{
 		if(commentList.isEmpty()) {}
 		
 		else {
+			UserAccount user = uba.getUserByAuth();
 		for(CommentsOfProduct comment : commentList) {
 			CommentProductDto commentDto = new CommentProductDto();
-			convertToDto(comment, commentDto);
+			convertToDto(comment, commentDto, user);
 			commentDtoList.add(commentDto);
 		}
 		}
 
 		return commentDtoList;
+	}
+	
+	
+	@Override
+	@Transactional
+	public void deleteComment(Long commentId) {
+		copRep.deleteById(commentId);
+
 	}
 
 
@@ -284,19 +315,6 @@ public class ProductServiceImpl implements ProductService{
 		productDto.setImages(ilist);
 		
 		
-//		Iterable<CommentsOfProduct> commentList = copRep.getCommentList(product);
-//		List<CommentProductDto> cList = new ArrayList<CommentProductDto>();
-//		for(CommentsOfProduct comment : commentList) {
-//			CommentProductDto commentDto = new CommentProductDto();
-//			commentDto.setId(comment.getID());
-//			commentDto.setUsername(comment.getUser().getNickName());
-//			commentDto.setComment(comment.getComment());
-//			cList.add(commentDto);
-//		}
-//		
-//		productDto.setComments(cList);
-		
-		
  	}
 
 	
@@ -328,12 +346,21 @@ public class ProductServiceImpl implements ProductService{
 	}
 	
 	
-	private void convertToDto(CommentsOfProduct comment, CommentProductDto commentDto) {
+	private void convertToDto(CommentsOfProduct comment, CommentProductDto commentDto,UserAccount user) {
 		commentDto.setId(comment.getID());
 		commentDto.setComment(comment.getComment());
 		commentDto.setUsername(comment.getUser().getNickName());
 		commentDto.setProductId(comment.getProduct().getProductID());
+		commentDto.setDate(comment.getDate());
+		if(comment.getUser()==user) {
+			commentDto.setByYou(true);
+		}else {
+			commentDto.setByYou(false);
+		}
 	}
+
+
+
 
 
 

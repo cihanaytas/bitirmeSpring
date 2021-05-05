@@ -26,8 +26,10 @@ public interface ProductService {
     
     public List<ProductDto> getAllProductByStore(Integer pageNo, Integer pageSize);
 
-	public void addComment(CommentProductDto commentDto);
+	public boolean addComment(CommentProductDto commentDto);
 
 	public List<CommentProductDto> getCommentList(Long productId);
+
+	public void deleteComment(Long commentId);
 
 }

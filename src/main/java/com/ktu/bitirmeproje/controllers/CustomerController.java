@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.ktu.bitirmeproje.business.dto.StoreDto;
@@ -140,10 +142,15 @@ public class CustomerController {
 	
 	
 	@PostMapping("customer/addcomment")
-	public void addComment(@RequestBody CommentProductDto comment) {
-		productService.addComment(comment);
-		
+	public boolean addComment(@RequestBody CommentProductDto comment) {
+		return productService.addComment(comment);		
 	}
+	
+	@PutMapping("customer/updatecomment")
+	public boolean updateComment(@RequestBody CommentProductDto comment) {
+		return productService.addComment(comment);		
+	}
+	
 	
 	
 	@GetMapping("customer/getcommentlist/{productId}")
@@ -154,6 +161,14 @@ public class CustomerController {
 			return new ResponseEntity<List<CommentProductDto>>(null, new HttpHeaders(), HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<List<CommentProductDto>>(list,new HttpHeaders(), HttpStatus.OK);
+	}
+	
+	
+	@DeleteMapping("customer/deletecomment/{commentId}")
+	public String deleteComment(@PathVariable(name="commentId") Long commentId) {
+		productService.deleteComment(commentId);
+		return "silindi";		
+
 	}
 	
 	

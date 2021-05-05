@@ -13,6 +13,6 @@ import com.ktu.bitirmeproje.data.entity.prod.Product;
 @Repository
 public interface CommentsOfProductRepository extends CrudRepository<CommentsOfProduct, Long>{
 
-	@Query("select c from CommentsOfProduct c where c.product= :product")
+	@Query("select c from CommentsOfProduct c where c.product= :product order by date desc")
 	public List<CommentsOfProduct> getCommentList(@Param("product")Product product);
 }
