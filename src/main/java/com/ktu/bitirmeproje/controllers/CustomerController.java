@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.ktu.bitirmeproje.business.dto.StoreDto;
+import com.ktu.bitirmeproje.business.dto.prod.CartItemDto;
 import com.ktu.bitirmeproje.business.dto.prod.CartsProductsDto;
+import com.ktu.bitirmeproje.business.dto.prod.CommentProductDto;
 import com.ktu.bitirmeproje.business.dto.prod.ProductDto;
 import com.ktu.bitirmeproje.business.dto.prod.ShoppingDto;
 import com.ktu.bitirmeproje.business.service.CustomerService;
@@ -116,8 +118,42 @@ public class CustomerController {
 	
 	
 	@GetMapping("customer/shoppinglist")
-	public List<ShoppingDto> getShoppingList(){
-		return shopService.getShoppingList();
+	public ResponseEntity<List<ShoppingDto>> getShoppingList(){
+		List<ShoppingDto> list = shopService.getShoppingList();
+		if(list.isEmpty()) {
+			return new ResponseEntity<List<ShoppingDto>>(null,new HttpHeaders(), HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<List<ShoppingDto>>(list,new HttpHeaders(), HttpStatus.OK);
+
+	}
+	
+	
+	@GetMapping("customer/getcartitem/{shoppingId}")
+	public ResponseEntity<List<CartItemDto>> getCartItemList(@PathVariable(name="shoppingId") Long shoppingId){
+		List<CartItemDto> list = shopService.getCartItemList(shoppingId);
+		if(list.isEmpty()) {
+			return new ResponseEntity<List<CartItemDto>>(null,new HttpHeaders(), HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<List<CartItemDto>>(list,new HttpHeaders(), HttpStatus.OK);
+		
+	}
+	
+	
+	@PostMapping("customer/addcomment")
+	public void addComment(@RequestBody CommentProductDto comment) {
+		productService.addComment(comment);
+		
+	}
+	
+	
+	@GetMapping("customer/getcommentlist/{productId}")
+	public ResponseEntity<List<CommentProductDto>> getCommentList(@PathVariable(name="productId") Long productId){
+		List<CommentProductDto> list = productService.getCommentList(productId);
+		
+		if(list.isEmpty()) {
+			return new ResponseEntity<List<CommentProductDto>>(null, new HttpHeaders(), HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<List<CommentProductDto>>(list,new HttpHeaders(), HttpStatus.OK);
 	}
 	
 	

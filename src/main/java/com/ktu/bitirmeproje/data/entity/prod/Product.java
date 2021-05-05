@@ -68,10 +68,9 @@ public class Product implements Serializable{
     @JoinColumn(name= "productId")
     private List<ProductImages> images = new ArrayList<ProductImages>();
     
-   
-//    
-//    @OneToMany(mappedBy = "product")
-//    private List<PointsOfProduct> points;
+    @OneToMany(targetEntity = CommentsOfProduct.class, cascade = CascadeType.ALL)
+    @JoinColumn(name= "productId")
+    private List<CommentsOfProduct> comments = new ArrayList<CommentsOfProduct>();
 
 	
     

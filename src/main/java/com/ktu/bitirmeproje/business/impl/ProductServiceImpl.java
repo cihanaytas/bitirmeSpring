@@ -1,26 +1,25 @@
 package com.ktu.bitirmeproje.business.impl;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import org.hibernate.mapping.Any;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
+
+import com.ktu.bitirmeproje.business.dto.prod.CommentProductDto;
 import com.ktu.bitirmeproje.business.dto.prod.ProductDto;
 import com.ktu.bitirmeproje.business.service.ProductService;
 import com.ktu.bitirmeproje.data.entity.UserAccount;
+import com.ktu.bitirmeproje.data.entity.prod.CommentsOfProduct;
 import com.ktu.bitirmeproje.data.entity.prod.PointsOfProduct;
 import com.ktu.bitirmeproje.data.entity.prod.Product;
 import com.ktu.bitirmeproje.data.entity.prod.ProductImages;
+import com.ktu.bitirmeproje.data.repository.CommentsOfProductRepository;
 import com.ktu.bitirmeproje.data.repository.MyProductRepository;
 import com.ktu.bitirmeproje.data.repository.PointsOfProductRepository;
 import com.ktu.bitirmeproje.data.repository.ProductImagesRepository;
@@ -52,6 +51,9 @@ public class ProductServiceImpl implements ProductService{
 	
 	@Autowired
 	private MyProductRepository proRep;
+	
+	@Autowired
+	private CommentsOfProductRepository copRep;
 	
 	@Override
 	public void addProduct(ProductDto productDto) {
@@ -156,12 +158,19 @@ public class ProductServiceImpl implements ProductService{
 		Optional<Product> p = productRepository.findById(productId);
 		Product product = p.get();
 		UserAccount user = uba.getUserByAuth();
-		PointsOfProduct pop = new PointsOfProduct();
-		pop.setUser(user);
-		pop.setProduct(product);
-		pop.setPoint(point);
-		product.getPoints().add(pop);
-
+		if(popRep.existByUser(user)==0) {
+			PointsOfProduct pop = new PointsOfProduct();
+			pop.setUser(user);
+			pop.setProduct(product);
+			pop.setPoint(point);
+			product.getPoints().add(pop);
+		}
+		else {
+			PointsOfProduct pop = popRep.getPop(user, product);
+			pop.setPoint(point);
+		}
+		
+	
 		productRepository.save(product);		
 	}
 	
@@ -207,6 +216,42 @@ public class ProductServiceImpl implements ProductService{
 	    
 	    return returnProduct(pagedResult);
 	}
+	
+	
+	@Override
+	public void addComment(CommentProductDto commentDto) {
+		UserAccount user = uba.getUserByAuth();
+		Optional<Product> p = productRepository.findById(commentDto.getProductId());
+		Product product = p.get();
+		CommentsOfProduct comment = new CommentsOfProduct();
+		convertToEntity(comment, commentDto);
+		comment.setUser(user);
+ 
+		product.getComments().add(comment);
+		
+		productRepository.save(product);	
+		
+	}
+	
+	
+	@Override
+	public List<CommentProductDto> getCommentList(Long productId) {
+		Product product = productRepository.findById(productId).orElse(null);;
+		List<CommentProductDto> commentDtoList = new ArrayList<CommentProductDto>();
+		List<CommentsOfProduct> commentList = copRep.getCommentList(product);
+		
+		if(commentList.isEmpty()) {}
+		
+		else {
+		for(CommentsOfProduct comment : commentList) {
+			CommentProductDto commentDto = new CommentProductDto();
+			convertToDto(comment, commentDto);
+			commentDtoList.add(commentDto);
+		}
+		}
+
+		return commentDtoList;
+	}
 
 
 
@@ -239,11 +284,20 @@ public class ProductServiceImpl implements ProductService{
 		productDto.setImages(ilist);
 		
 		
- 
+//		Iterable<CommentsOfProduct> commentList = copRep.getCommentList(product);
+//		List<CommentProductDto> cList = new ArrayList<CommentProductDto>();
+//		for(CommentsOfProduct comment : commentList) {
+//			CommentProductDto commentDto = new CommentProductDto();
+//			commentDto.setId(comment.getID());
+//			commentDto.setUsername(comment.getUser().getNickName());
+//			commentDto.setComment(comment.getComment());
+//			cList.add(commentDto);
+//		}
+//		
+//		productDto.setComments(cList);
 		
 		
-		
- 		}
+ 	}
 
 	
 	private void convertToEntity(Product product, ProductDto productDto) { 
@@ -256,22 +310,36 @@ public class ProductServiceImpl implements ProductService{
 		product.setCategory(productDto.getCategory().toString());
 		product.setUnits(productDto.getUnits());
 		product.setDate(productDto.getDate());
-		
-		//List<ProductImages> listImages = new ArrayList<ProductImages>();
+
 		for(String uri:productDto.getImages()) {
 			ProductImages image = new ProductImages();
 			image.setProduct(product);
 			image.setImageUri(uri);
-			//listImages.add(image);
 			product.getImages().add(image);
 		}
 
-		//product.setImages(listImages);
-		
-		
-		
-		
 	}
+	
+	
+	private void convertToEntity(CommentsOfProduct comment, CommentProductDto commentDto) {
+		comment.setComment(commentDto.getComment());
+		Optional<Product> product = productRepository.findById(commentDto.getProductId());
+		comment.setProduct(product.get());
+	}
+	
+	
+	private void convertToDto(CommentsOfProduct comment, CommentProductDto commentDto) {
+		commentDto.setId(comment.getID());
+		commentDto.setComment(comment.getComment());
+		commentDto.setUsername(comment.getUser().getNickName());
+		commentDto.setProductId(comment.getProduct().getProductID());
+	}
+
+
+
+
+
+
 
 
 

@@ -56,14 +56,11 @@ public class ProductDto implements Serializable{
 	@NotNull
 	private int units;
 	
-	//private List<PointsOfProduct> points = new ArrayList<PointsOfProduct>();
-	
 	private List<Double> points;
 	
 	private List<String> images;
-//	
-//	private HashMap<String, String> img;
-//	
-//	private byte[] imagess;
-//	
+	
+	private List<CommentProductDto> comments;
+
+
 }
