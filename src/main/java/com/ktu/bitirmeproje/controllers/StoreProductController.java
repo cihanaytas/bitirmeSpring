@@ -31,6 +31,8 @@ public class StoreProductController {
 	
 	@PostMapping("/addproduct")
 	public String addProduct(@Valid @RequestBody ProductDto productDto) {
+		System.out.println("geldim");
+		System.out.println(productDto);
 		productService.addProduct(productDto);
 		return "a";
 	}

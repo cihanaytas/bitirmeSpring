@@ -15,5 +15,9 @@ public interface UserAccountRepository extends CrudRepository<UserAccount, Strin
 	
 	@Query("select case when count(u)> 0 then true else false end from UserAccount u where u.e_mail = :mail")
 	public Boolean existsByMail(@Param("mail") String mail);
+	
+	@Query("select u from UserAccount u where u.e_mail= :e_mail")
+	public UserAccount findByE_mail(@Param("e_mail") String e_mail);
+	
  
 }

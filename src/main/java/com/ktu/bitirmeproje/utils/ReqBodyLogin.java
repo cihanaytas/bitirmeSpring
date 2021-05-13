@@ -1,8 +1,13 @@
 package com.ktu.bitirmeproje.utils;
 
+import com.ktu.bitirmeproje.password.ValidPassword;
+
+
 public class ReqBodyLogin {
 	
 	private String username;
+	
+	@ValidPassword
 	private String password;
 	
 	

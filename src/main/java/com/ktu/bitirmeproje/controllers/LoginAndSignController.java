@@ -2,6 +2,7 @@ package com.ktu.bitirmeproje.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 import com.ktu.bitirmeproje.business.dto.UserAccountDto;
+import com.ktu.bitirmeproje.business.service.PasswordService;
 import com.ktu.bitirmeproje.business.service.UserAccountService;
 import com.ktu.bitirmeproje.data.entity.UserAccount;
 import com.ktu.bitirmeproje.utils.ReqBodyLogin;
@@ -23,6 +24,9 @@ public class LoginAndSignController {
 	@Autowired
 	private UserAccountService uaService;
 	
+	@Autowired
+	private PasswordService passwordService;
+
 	
 	@PostMapping("/login")
 	public boolean login(@RequestBody ReqBodyLogin reqBody)  {
@@ -41,14 +45,29 @@ public class LoginAndSignController {
 	}
 	
 	
-
-	
 	
 	@GetMapping("/userrole/{username}")
 	public String getUserRole(@PathVariable("username") String username) {
 		String role = uaService.getUserRole(username);
 		return role;
 	}
+	
+	@GetMapping("/parola/{mail}")
+	public ResponseEntity<?> password(@PathVariable(name="mail") String mail){
+		return passwordService.sendCode(mail);
+	}
+	
+	@PostMapping("parola/{code}")
+	public ResponseEntity<?> checkCode(@PathVariable(name="code") String code) {
+		return passwordService.checkCode(code);
+	}
+	
+	
+	@PostMapping("parola")
+	public ResponseEntity<?> setPassword(@Valid @RequestBody ReqBodyLogin reqBody) {
+		return passwordService.setPassword(reqBody);
+	}
+	
 	
 	
 	

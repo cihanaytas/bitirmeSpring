@@ -14,5 +14,6 @@ public class CartsProductsDto {
 	private long productId;
 	private double price;
 	private int quantity;
+	private String category;
 
 }

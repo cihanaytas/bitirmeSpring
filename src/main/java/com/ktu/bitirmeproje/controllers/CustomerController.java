@@ -1,5 +1,6 @@
 package com.ktu.bitirmeproje.controllers;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +20,16 @@ import com.ktu.bitirmeproje.business.dto.prod.CartsProductsDto;
 import com.ktu.bitirmeproje.business.dto.prod.CommentProductDto;
 import com.ktu.bitirmeproje.business.dto.prod.ProductDto;
 import com.ktu.bitirmeproje.business.dto.prod.ShoppingDto;
+import com.ktu.bitirmeproje.business.impl.SendMail;
+import com.ktu.bitirmeproje.business.impl.apriori.Apriori;
 import com.ktu.bitirmeproje.business.service.CustomerService;
+import com.ktu.bitirmeproje.business.service.PasswordService;
 import com.ktu.bitirmeproje.business.service.ProductService;
 import com.ktu.bitirmeproje.business.service.ShoppingService;
 import com.ktu.bitirmeproje.data.entity.StoreDetails;
 import com.ktu.bitirmeproje.data.entity.StorePoints;
 import com.ktu.bitirmeproje.data.entity.UserAccount;
+import com.ktu.bitirmeproje.data.repository.AprioriOranRepository;
 import com.ktu.bitirmeproje.data.repository.StoreRepository;
 import com.ktu.bitirmeproje.data.repository.UserAccountRepository;
 
@@ -45,6 +50,7 @@ public class CustomerController {
 	
 	@Autowired
 	private ShoppingService shopService;
+	
 
 	
 	@GetMapping("customer/products")
@@ -112,7 +118,7 @@ public class CustomerController {
 
 	
 	@PostMapping("customer/sales")
-	public String sales(@RequestBody List<CartsProductsDto> cartList) {
+	public String sales(@RequestBody List<CartsProductsDto> cartList) throws IOException {
 		customerService.sales(cartList);
 
 		return "a";
@@ -170,22 +176,26 @@ public class CustomerController {
 		return "silindi";		
 
 	}
-	
-	
-	
  
 	
 
+	@Autowired
+	private Apriori apriori;
 	
+	@Autowired
+	private AprioriOranRepository apRep;
 	
+	@GetMapping("customer/testapriori")
+	public void asfd() throws IOException {
+		apriori.fun();
+	}
+	
+	@GetMapping("customer/testapriori2")
+	public int assfd() {
+		return apRep.exist("süt", "ekmek");
+	}
 
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	
