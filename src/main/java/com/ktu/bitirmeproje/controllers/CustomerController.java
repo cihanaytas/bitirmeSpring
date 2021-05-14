@@ -65,10 +65,15 @@ public class CustomerController {
 	}
 	
 	
+//	@GetMapping("customer/product/{id}")
+//	public ProductDto getProduct(@PathVariable(name = "id") long productId) {
+//		ProductDto product =  productService.getProduct(productId);
+//		return product;
+//	}
+	
 	@GetMapping("customer/product/{id}")
-	public ProductDto getProduct(@PathVariable(name = "id") long productId) {
-		ProductDto product =  productService.getProduct(productId);
-		return product;
+	public List<ProductDto> getProduct(@PathVariable(name = "id") long productId) {
+		return productService.getProductOran(productId);
 	}
 	
 	

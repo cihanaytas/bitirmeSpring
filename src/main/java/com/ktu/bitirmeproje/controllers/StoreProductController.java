@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ktu.bitirmeproje.business.dto.prod.ProductDto;
 import com.ktu.bitirmeproje.business.service.ProductService;
-import com.ktu.bitirmeproje.data.entity.prod.Product;
 
 
 @RestController
@@ -31,8 +30,6 @@ public class StoreProductController {
 	
 	@PostMapping("/addproduct")
 	public String addProduct(@Valid @RequestBody ProductDto productDto) {
-		System.out.println("geldim");
-		System.out.println(productDto);
 		productService.addProduct(productDto);
 		return "a";
 	}

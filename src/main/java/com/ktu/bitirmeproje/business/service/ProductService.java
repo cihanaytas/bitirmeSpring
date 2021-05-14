@@ -14,6 +14,8 @@ public interface ProductService {
 	
 	public ProductDto getProduct(long productId);
 	
+	public List<ProductDto> getProductOran(long productId);
+	
 	public void pointProduct(long productId, double point);
 
 	public void addProduct(ProductDto productDto);

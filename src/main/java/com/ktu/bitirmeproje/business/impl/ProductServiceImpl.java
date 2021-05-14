@@ -18,10 +18,12 @@ import com.ktu.bitirmeproje.business.dto.prod.CommentProductDto;
 import com.ktu.bitirmeproje.business.dto.prod.ProductDto;
 import com.ktu.bitirmeproje.business.service.ProductService;
 import com.ktu.bitirmeproje.data.entity.UserAccount;
+import com.ktu.bitirmeproje.data.entity.prod.AprioriOran;
 import com.ktu.bitirmeproje.data.entity.prod.CommentsOfProduct;
 import com.ktu.bitirmeproje.data.entity.prod.PointsOfProduct;
 import com.ktu.bitirmeproje.data.entity.prod.Product;
 import com.ktu.bitirmeproje.data.entity.prod.ProductImages;
+import com.ktu.bitirmeproje.data.repository.AprioriOranRepository;
 import com.ktu.bitirmeproje.data.repository.CommentsOfProductRepository;
 import com.ktu.bitirmeproje.data.repository.MyProductRepository;
 import com.ktu.bitirmeproje.data.repository.PointsOfProductRepository;
@@ -57,6 +59,9 @@ public class ProductServiceImpl implements ProductService{
 	
 	@Autowired
 	private CommentsOfProductRepository copRep;
+	
+	@Autowired
+	private AprioriOranRepository aoRep;
 	
 	@Override
 	public void addProduct(ProductDto productDto) {
@@ -154,6 +159,50 @@ public class ProductServiceImpl implements ProductService{
 		convertToDto(product.get(), productDto);
 		return productDto;
 	}
+	
+	
+	@Override
+	public List<ProductDto> getProductOran(long productId){
+		List<ProductDto> listDto = new ArrayList<>();
+		List<Product> list = new ArrayList<Product>();
+		
+		Optional<Product> product = productRepository.findById(productId);
+
+		List<AprioriOran> oranlar = aoRep.getOran(product.get().getCategory());
+			
+		List<Product> myList = new ArrayList<Product>();
+		if(oranlar.isEmpty()) {
+			list = productRepository.randomRows(product.get().getCategory(),productId,2);	
+			myList = list;
+			myList.add(0,product.get());
+		}
+		else if(oranlar.size()==1) {
+			list = productRepository.randomRows(oranlar.get(0).getCategory2(),productId,2);
+			myList = list;
+			myList.add(0,product.get());
+		}
+		else if(oranlar.size()>=2) {
+			list.add(productRepository.randomRow(oranlar.get(0).getCategory2()));
+			list.add(productRepository.randomRow(oranlar.get(1).getCategory2()));
+			myList = list;
+			myList.add(0,product.get());
+		}
+
+		
+		
+		for(Product p : myList) {
+
+			ProductDto productDto = new ProductDto();
+			convertToDto(p, productDto);
+			listDto.add(productDto);
+		}
+		
+		return listDto;
+		
+	}
+	
+	
+	
 	
 	
 	@Override

@@ -19,5 +19,13 @@ public interface ProductRepository extends CrudRepository<Product, Long>{
 	
 	@Query("select count(*) from Product p where p.store= :store and p.brand= :brand and p.model= :model")
 	public int isExist(@Param("store") UserAccount store, @Param("brand") String brand, @Param("model") String model);
+	
+	@Query(value="SELECT * FROM Product where category= :category AND productID!= :productId ORDER BY RAND ()  LIMIT :limit", nativeQuery = true)
+	public List<Product> randomRows(@Param("category") String category, @Param("productId") Long productId, @Param("limit") int limit);
+	
+	@Query(value = "SELECT * FROM Product where category= :category  ORDER BY RAND () LIMIT 1", nativeQuery = true)
+	public Product randomRow(@Param("category") String category);
+	
+
 
 }
