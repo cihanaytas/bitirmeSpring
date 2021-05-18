@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +33,9 @@ import com.ktu.bitirmeproje.business.service.ShoppingService;
 import com.ktu.bitirmeproje.data.entity.StoreDetails;
 import com.ktu.bitirmeproje.data.entity.StorePoints;
 import com.ktu.bitirmeproje.data.entity.UserAccount;
+import com.ktu.bitirmeproje.data.entity.prod.Product;
 import com.ktu.bitirmeproje.data.repository.AprioriOranRepository;
+import com.ktu.bitirmeproje.data.repository.MyProductRepository;
 import com.ktu.bitirmeproje.data.repository.StoreRepository;
 import com.ktu.bitirmeproje.data.repository.UserAccountRepository;
 
@@ -53,17 +59,6 @@ public class CustomerController {
 	
 
 	
-	@GetMapping("customer/products")
-	public List<ProductDto> getAllProduct(){
-		
-		return productService.getAllProducts();
-	}
-	
-	@GetMapping("customer/products/{nickName}")
-	public List<ProductDto> getAllProductByNickname(@PathVariable("nickName") String nickName){	
-		return productService.getAllProductByNickname(nickName);
-	}
-	
 	
 //	@GetMapping("customer/product/{id}")
 //	public ProductDto getProduct(@PathVariable(name = "id") long productId) {
@@ -71,17 +66,9 @@ public class CustomerController {
 //		return product;
 //	}
 	
-	@GetMapping("customer/product/{id}")
-	public List<ProductDto> getProduct(@PathVariable(name = "id") long productId) {
-		return productService.getProductOran(productId);
-	}
+
 	
-	
-	
-	@PostMapping("customer/pointproduct/{productId}/{point}")
-	public void pointproduct(@PathVariable("productId") Long productId,@PathVariable("point") double point) {
-		productService.pointProduct(productId, point);
-	}
+
 	
 	
 	@GetMapping("customer/getstoredetail/{storeNickName}")
@@ -105,20 +92,18 @@ public class CustomerController {
 
 	}
 	
-	@GetMapping("customer/plist/{page}")
-	public ResponseEntity<List<ProductDto>> getplist(@PathVariable(name="page") Integer page) {
-		 List<ProductDto> list = productService.getAllProducts(page, 10, "date");
 
-	        return new ResponseEntity<List<ProductDto>>(list, new HttpHeaders(), HttpStatus.OK);
-	}
 	
 	
-	@GetMapping("customer/plist/{category}/{page}")
-	public ResponseEntity<List<ProductDto>> getphonelist(@PathVariable(name="page") Integer page,@PathVariable(name="category") String category) {
-		 List<ProductDto> list = productService.getAllProductByCategory(page, 10, "date",category);
+//	@GetMapping("customer/plist/{category}/{page}")
+//	public ResponseEntity<List<ProductDto>> getphonelist(@PathVariable(name="page") Integer page,@PathVariable(name="category") String category) {
+//		 List<ProductDto> list = productService.getAllProductByCategory(page, 10, "date",category);
+//
+//	     return new ResponseEntity<List<ProductDto>>(list, new HttpHeaders(), HttpStatus.OK);
+//	}
+	
 
-	     return new ResponseEntity<List<ProductDto>>(list, new HttpHeaders(), HttpStatus.OK);
-	}
+	
 	
 
 	
@@ -152,35 +137,10 @@ public class CustomerController {
 	}
 	
 	
-	@PostMapping("customer/addcomment")
-	public boolean addComment(@RequestBody CommentProductDto comment) {
-		return productService.addComment(comment);		
-	}
-	
-	@PutMapping("customer/updatecomment")
-	public boolean updateComment(@RequestBody CommentProductDto comment) {
-		return productService.addComment(comment);		
-	}
-	
-	
-	
-	@GetMapping("customer/getcommentlist/{productId}")
-	public ResponseEntity<List<CommentProductDto>> getCommentList(@PathVariable(name="productId") Long productId){
-		List<CommentProductDto> list = productService.getCommentList(productId);
-		
-		if(list.isEmpty()) {
-			return new ResponseEntity<List<CommentProductDto>>(null, new HttpHeaders(), HttpStatus.NOT_FOUND);
-		}
-		return new ResponseEntity<List<CommentProductDto>>(list,new HttpHeaders(), HttpStatus.OK);
-	}
-	
-	
-	@DeleteMapping("customer/deletecomment/{commentId}")
-	public String deleteComment(@PathVariable(name="commentId") Long commentId) {
-		productService.deleteComment(commentId);
-		return "silindi";		
 
-	}
+	
+	
+
  
 	
 
@@ -199,6 +159,10 @@ public class CustomerController {
 	public int assfd() {
 		return apRep.exist("süt", "ekmek");
 	}
+	
+	
+
+
 
 
 	

@@ -29,16 +29,6 @@ public class Apriori {
 
 	@Autowired
 	private AprioriOranRepository apRep;
-    
-
-//    List<String> products= new ArrayList<String>();
-//    products.add("telefon");
-//    products.add("tablet");
-//    products.add("kulaklık");
-//    products.add("ayakkabı");
-//    products.add("telefon kabı");
-//    products.add("televizyon");
-//    products.add("laptop");
 
 
 	
@@ -48,24 +38,11 @@ public class Apriori {
         List<List<String>> myList = new ArrayList<List<String>>();
         HashMap<String,Double> oranlar = new HashMap<String,Double>();
         List<List<String>> myList2 = new ArrayList<List<String>>();
-        List<List<String>> myList3 = new ArrayList<List<String>>();
-       // List<String> products= new ArrayList<String>();
-        
+        List<List<String>> myList3 = new ArrayList<List<String>>();    
         List<String> products = Stream.of(CategoryType.values())
                 .map(Enum::name)
                 .collect(Collectors.toList());
         
- 
-        
-    
-//    products.add("ekmek");
-//    products.add("süt");
-//    products.add("çerez");
-//    products.add("salça");
-//    products.add("bira");
-//    products.add("bebek bezi");
-//    products.add("yumurta");
-//    products.add("kola");
 
 
 
@@ -82,7 +59,6 @@ public class Apriori {
         line = reader.readLine();
     }
 
-    //  System.out.println(myList);
 
 
 
@@ -100,8 +76,6 @@ public class Apriori {
         //}
 
     }
-
-  //  System.out.println(oranlar);
 
 
 
@@ -161,7 +135,6 @@ public class Apriori {
         line2 = reader.readLine();
     }
 
-  //  System.out.println(myList2);
 
 
 
@@ -209,21 +182,11 @@ public class Apriori {
     }
     
 
-
-  // 	System.out.println(myList3);
-	System.out.println(myList2);
-
     List<List<String>> myList4 = new ArrayList<List<String>>(myList3);
     	myList4.removeAll(myList2);
     	myList2.removeAll(myList3);
-    	//myList2.removeAll(myList4);
 
-    	System.out.println(myList2);
-    	//System.out.println(myList3);
-     //	System.out.println(myList4);
-     	
-     	
-    
+
     
     for(List<String> list : myList4) {
     	if(apRep.exist(list.get(0),list.get(1))>0) {
@@ -245,7 +208,6 @@ public class Apriori {
     for(List<String> list : myList2) {
     	AprioriOran ap = apRep.getExist2(list.get(0),list.get(1),list.get(2));
     	if(ap!=null) {
-    		System.out.println(ap);
     		apRep.deleteById(ap.getId());
     	}
     }

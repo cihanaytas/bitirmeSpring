@@ -210,7 +210,7 @@ public class ProductServiceImpl implements ProductService{
 		Optional<Product> p = productRepository.findById(productId);
 		Product product = p.get();
 		UserAccount user = uba.getUserByAuth();
-		if(popRep.existByUser(user)==0) {
+		if(popRep.existByUser(user,p.get())==0) {
 			PointsOfProduct pop = new PointsOfProduct();
 			pop.setUser(user);
 			pop.setProduct(product);
@@ -227,14 +227,22 @@ public class ProductServiceImpl implements ProductService{
 	}
 	
 	@Override
-    public List<ProductDto> getAllProducts(Integer pageNo, Integer pageSize, String sortBy)
+    public List<ProductDto> getAllProducts(Integer pageNo, Integer pageSize, String sortBy, Boolean orderby)
     {
-        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
- 
+		Pageable paging;
+		if(orderby==true)
+			paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
+		else
+			paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).ascending());
+		
         Page<Product> pagedResult = proRep.findAll(paging);
 
         return returnProduct(pagedResult);
     }
+	
+
+	
+	
 	
 	@Override
 	public List<ProductDto> getAllProductByCategory(Integer pageNo, Integer pageSize, String sortBy,String category) {
@@ -243,6 +251,16 @@ public class ProductServiceImpl implements ProductService{
       
         return returnProduct(pagedResult);
 	}
+	
+	@Override
+	public List<ProductDto> search(Integer pageNo, Integer pageSize, String sortBy,String category) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
+        Page<Product> pagedResult = proRep.test(category, paging);
+      
+        return returnProduct(pagedResult);
+	}
+	
+	
 	
 	public List<ProductDto> returnProduct(Page<Product> pagedResult){
         if(pagedResult.hasContent()) {
@@ -268,6 +286,15 @@ public class ProductServiceImpl implements ProductService{
 	    
 	    return returnProduct(pagedResult);
 	}
+	
+	
+	@Override
+	public List<ProductDto> priceRange(Integer pageNo, Integer pageSize, Long min, Long max) {
+		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by("price").descending());
+		Page<Product> pagedResult = proRep.findByPriceBetween(min, max, paging);
+		return returnProduct(pagedResult);
+	}
+
 	
 	
 	@Override
@@ -330,7 +357,6 @@ public class ProductServiceImpl implements ProductService{
 	@Transactional
 	public void deleteComment(Long commentId) {
 		copRep.deleteById(commentId);
-
 	}
 
 
@@ -407,6 +433,8 @@ public class ProductServiceImpl implements ProductService{
 			commentDto.setByYou(false);
 		}
 	}
+
+
 
 
 

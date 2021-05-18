@@ -17,8 +17,8 @@ public interface PointsOfProductRepository extends CrudRepository<PointsOfProduc
 	@Query("select p from PointsOfProduct p where p.product= :product")
 	public List<PointsOfProduct> getPointList(@Param("product")Product product);
 	
-	@Query("select count(*) from PointsOfProduct p where p.user= :user")
-	public int existByUser(@Param("user") UserAccount user);
+	@Query("select count(*) from PointsOfProduct p where p.user= :user and p.product= :product")
+	public int existByUser(@Param("user") UserAccount user,@Param("product") Product product);
 	
 	@Query("select p from PointsOfProduct p where p.user= :user and p.product= :product")
 	public PointsOfProduct getPop(@Param("user") UserAccount user,@Param("product") Product product);

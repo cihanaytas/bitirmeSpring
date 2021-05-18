@@ -14,6 +14,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.springframework.data.elasticsearch.annotations.Document;
+
 import com.ktu.bitirmeproje.data.entity.UserAccount;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -63,6 +66,7 @@ public class Product implements Serializable{
     @OneToMany(targetEntity = CommentsOfProduct.class, cascade = CascadeType.ALL)
     @JoinColumn(name= "productId")
     private List<CommentsOfProduct> comments = new ArrayList<CommentsOfProduct>();
+    
 
 	
     

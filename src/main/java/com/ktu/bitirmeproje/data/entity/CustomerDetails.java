@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.ktu.bitirmeproje.data.entity.prod.FavouriteProducts;
 import com.ktu.bitirmeproje.data.entity.prod.Shopping;
 
 import lombok.AllArgsConstructor;
@@ -42,5 +43,9 @@ public class CustomerDetails implements Serializable{
     @OneToMany(targetEntity = Shopping.class, cascade = CascadeType.ALL)
     @JoinColumn(name="customerdetailId")
     private List<Shopping> shoppingList = new ArrayList<Shopping>();
+    
+    @OneToMany(targetEntity = FavouriteProducts.class, cascade = CascadeType.ALL)
+    @JoinColumn(name="customerdetailId")
+    private List<FavouriteProducts> favourites = new ArrayList<FavouriteProducts>();
 	
 }

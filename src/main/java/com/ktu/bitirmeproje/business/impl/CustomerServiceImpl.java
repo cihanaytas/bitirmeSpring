@@ -9,17 +9,25 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import javax.transaction.Transactional;
+
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.ktu.bitirmeproje.business.dto.FavouriteProductsDto;
 import com.ktu.bitirmeproje.business.dto.prod.CartsProductsDto;
 import com.ktu.bitirmeproje.business.impl.apriori.Apriori;
 import com.ktu.bitirmeproje.business.service.CustomerService;
 import com.ktu.bitirmeproje.data.entity.CustomerDetails;
 import com.ktu.bitirmeproje.data.entity.UserAccount;
 import com.ktu.bitirmeproje.data.entity.prod.CartsProducts;
+import com.ktu.bitirmeproje.data.entity.prod.FavouriteProducts;
 import com.ktu.bitirmeproje.data.entity.prod.Product;
 import com.ktu.bitirmeproje.data.entity.prod.Shopping;
 import com.ktu.bitirmeproje.data.repository.CustomerRepository;
+import com.ktu.bitirmeproje.data.repository.FavouriteProductsRepository;
 import com.ktu.bitirmeproje.data.repository.ProductRepository;
 import com.ktu.bitirmeproje.utils.UserByAuth;
 
@@ -39,6 +47,10 @@ public class CustomerServiceImpl implements CustomerService{
 	
 	@Autowired
 	private Apriori apriori;
+	
+	@Autowired
+	private FavouriteProductsRepository favRep;
+ 
 	
 	@Override
 	public void sales(List<CartsProductsDto> cartListDto) throws IOException {
@@ -82,6 +94,48 @@ public class CustomerServiceImpl implements CustomerService{
 	}
 	
 	
+	@Override
+	public List<Long> getFavouriteList() {
+		UserAccount user = authService.getUserByAuth();
+		CustomerDetails customer = customerRepository.findByCustomer(user);
+		List<Long> favDtoList = new ArrayList<Long>();
+		
+		for(FavouriteProducts fav : customer.getFavourites()) {
+			FavouriteProductsDto favDto = new FavouriteProductsDto();
+			convertToDto(fav,favDto);
+			favDtoList.add(favDto.getProductId());
+		}
+		
+		return favDtoList;
+	}
+	
+	
+	@Override
+	public void addFavourite(Long productId) {
+		UserAccount user = authService.getUserByAuth();
+		CustomerDetails customer = customerRepository.findByCustomer(user);
+		Optional<Product> p = productRepository.findById(productId);
+		FavouriteProducts fav = new FavouriteProducts();
+		fav.setCustomer(customer);
+		fav.setProduct(p.get());
+		customer.getFavourites().add(fav);
+		
+		customerRepository.save(customer);
+	}
+	
+	@Override
+	@Transactional
+	public void deleteFavourite(Long productId) {
+		UserAccount user = authService.getUserByAuth();
+		CustomerDetails customer = customerRepository.findByCustomer(user);
+		Optional<Product> p = productRepository.findById(productId);
+		FavouriteProducts fav = favRep.getFav(p.get(), customer);
+		favRep.deleteById(fav.getID());
+
+	}
+
+	
+	
 	
 	private void converToEntityCartProducts(CartsProducts cart, CartsProductsDto cartDto) {
 		cart.setQuantity(cartDto.getQuantity());
@@ -113,6 +167,22 @@ public class CustomerServiceImpl implements CustomerService{
                 //exception handling left as an exercise for the reader
             }
 	}
+	
+	private void convertToDto(FavouriteProducts fav, FavouriteProductsDto favDto) {
+		favDto.setCustomerNickName(fav.getCustomer().getCustomer().getNickName());
+		favDto.setID(fav.getID());
+		favDto.setProductId(fav.getProduct().getProductID());
+		
+	}
+
+
+
+
+
+
+
+
+
 
  
 
