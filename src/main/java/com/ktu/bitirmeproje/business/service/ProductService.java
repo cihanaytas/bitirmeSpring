@@ -38,5 +38,7 @@ public interface ProductService {
 	
 	public List<ProductDto> priceRange(Integer pageNo, Integer pageSize,Long min,Long max);
 
+	List<ProductDto> getProductListByCategoryList(Integer pageNo, Integer pageSize, List<String> categories);
+
 
 }

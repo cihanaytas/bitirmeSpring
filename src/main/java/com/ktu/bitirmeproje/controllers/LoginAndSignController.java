@@ -67,6 +67,7 @@ public class LoginAndSignController {
 	public ResponseEntity<?> setPassword(@Valid @RequestBody ReqBodyLogin reqBody) {
 		return passwordService.setPassword(reqBody);
 	}
+
 	
 	
 	

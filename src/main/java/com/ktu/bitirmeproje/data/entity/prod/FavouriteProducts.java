@@ -1,5 +1,7 @@
 package com.ktu.bitirmeproje.data.entity.prod;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -35,4 +37,6 @@ public class FavouriteProducts {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "productId")
 	private Product product;
+	
+	private Date date;
 }

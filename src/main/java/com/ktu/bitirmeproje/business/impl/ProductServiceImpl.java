@@ -1,6 +1,7 @@
 package com.ktu.bitirmeproje.business.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -255,7 +256,7 @@ public class ProductServiceImpl implements ProductService{
 	@Override
 	public List<ProductDto> search(Integer pageNo, Integer pageSize, String sortBy,String category) {
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy).descending());
-        Page<Product> pagedResult = proRep.test(category, paging);
+        Page<Product> pagedResult = proRep.search(category, paging);
       
         return returnProduct(pagedResult);
 	}
@@ -353,10 +354,23 @@ public class ProductServiceImpl implements ProductService{
 	}
 	
 	
+	
 	@Override
 	@Transactional
 	public void deleteComment(Long commentId) {
 		copRep.deleteById(commentId);
+	}
+	
+	
+
+	@Override
+	public List<ProductDto> getProductListByCategoryList(Integer pageNo, Integer pageSize,List<String> categories) {
+
+		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by("date").descending());
+		
+        Page<Product> pagedResult =  proRep.getProductListByCategoryList(categories,paging);
+        
+        return returnProduct(pagedResult);
 	}
 
 
@@ -433,6 +447,9 @@ public class ProductServiceImpl implements ProductService{
 			commentDto.setByYou(false);
 		}
 	}
+
+
+
 
 
 

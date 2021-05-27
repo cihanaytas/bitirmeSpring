@@ -12,11 +12,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.persistence.Index;
 import javax.persistence.TemporalType;
-
-import org.springframework.data.elasticsearch.annotations.Document;
-
 import com.ktu.bitirmeproje.data.entity.UserAccount;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,10 +23,12 @@ import lombok.NoArgsConstructor;
 
 
 //@Document(indexName = "product")
-@Entity
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor 
+@Entity
+@Table(name="product",indexes = @Index(name="idx",columnList = "brand,model,category"))
 public class Product implements Serializable{
  
 	private static final long serialVersionUID = 1L;

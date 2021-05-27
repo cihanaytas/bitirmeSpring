@@ -9,26 +9,34 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
 import javax.transaction.Transactional;
-
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
 import com.ktu.bitirmeproje.business.dto.FavouriteProductsDto;
 import com.ktu.bitirmeproje.business.dto.prod.CartsProductsDto;
+import com.ktu.bitirmeproje.business.dto.prod.ProductDto;
 import com.ktu.bitirmeproje.business.impl.apriori.Apriori;
 import com.ktu.bitirmeproje.business.service.CustomerService;
 import com.ktu.bitirmeproje.data.entity.CustomerDetails;
 import com.ktu.bitirmeproje.data.entity.UserAccount;
 import com.ktu.bitirmeproje.data.entity.prod.CartsProducts;
 import com.ktu.bitirmeproje.data.entity.prod.FavouriteProducts;
+import com.ktu.bitirmeproje.data.entity.prod.PointsOfProduct;
 import com.ktu.bitirmeproje.data.entity.prod.Product;
+import com.ktu.bitirmeproje.data.entity.prod.ProductImages;
 import com.ktu.bitirmeproje.data.entity.prod.Shopping;
 import com.ktu.bitirmeproje.data.repository.CustomerRepository;
 import com.ktu.bitirmeproje.data.repository.FavouriteProductsRepository;
+import com.ktu.bitirmeproje.data.repository.MyFavouriteProductsRepository;
+import com.ktu.bitirmeproje.data.repository.MyProductRepository;
+import com.ktu.bitirmeproje.data.repository.PointsOfProductRepository;
+import com.ktu.bitirmeproje.data.repository.ProductImagesRepository;
 import com.ktu.bitirmeproje.data.repository.ProductRepository;
+import com.ktu.bitirmeproje.utils.CategoryType;
 import com.ktu.bitirmeproje.utils.UserByAuth;
 
 
@@ -43,6 +51,9 @@ public class CustomerServiceImpl implements CustomerService{
 	private ProductRepository productRepository;
 	
 	@Autowired
+	private MyProductRepository proRep;
+	
+	@Autowired
 	private UserByAuth authService;
 	
 	@Autowired
@@ -50,6 +61,12 @@ public class CustomerServiceImpl implements CustomerService{
 	
 	@Autowired
 	private FavouriteProductsRepository favRep;
+	
+	@Autowired
+	private PointsOfProductRepository popRep;
+	
+	@Autowired
+	private ProductImagesRepository piRep;
  
 	
 	@Override
@@ -118,6 +135,8 @@ public class CustomerServiceImpl implements CustomerService{
 		FavouriteProducts fav = new FavouriteProducts();
 		fav.setCustomer(customer);
 		fav.setProduct(p.get());
+		Date date = new Date();
+		fav.setDate(date);
 		customer.getFavourites().add(fav);
 		
 		customerRepository.save(customer);
@@ -132,6 +151,50 @@ public class CustomerServiceImpl implements CustomerService{
 		FavouriteProducts fav = favRep.getFav(p.get(), customer);
 		favRep.deleteById(fav.getID());
 
+	}
+	
+	@Autowired
+	private MyFavouriteProductsRepository xrep;
+	
+	//returned favourite product list
+	@Override
+	public List<ProductDto> getFavouriteProductsList(Integer page, Integer pageSize) {
+		Pageable paging = PageRequest.of(page, pageSize);
+		
+		UserAccount user = authService.getUserByAuth();
+		CustomerDetails customer = customerRepository.findByCustomer(user);
+		
+		
+		
+		List<Product> productList = new ArrayList<Product>();
+		
+		Page<Product> pagedResult = xrep.xyz(customer, paging);
+        if(pagedResult.hasContent()) {
+        	List<Product> list = pagedResult.getContent();
+    		List<ProductDto> listDto = new ArrayList<>();	
+    		for(Product product : list) {
+    			ProductDto productDto = new ProductDto();
+    			convertToDto(product, productDto);
+    			listDto.add(productDto);
+    		}
+            return listDto;
+        } else {
+            return new ArrayList<ProductDto>();
+        }
+		
+//		for(FavouriteProducts fav : customer.getFavourites()) {
+//			productList.add(fav.getProduct());
+//		}
+//		
+//		List<ProductDto> productDtoList = new ArrayList<ProductDto>();
+//		
+//		for(Product product : productList) {
+//			ProductDto productDto = new ProductDto();
+//			convertToDto(product, productDto);
+//			productDtoList.add(productDto);
+//		}
+//				
+//		return productDtoList;
 	}
 
 	
@@ -171,9 +234,42 @@ public class CustomerServiceImpl implements CustomerService{
 	private void convertToDto(FavouriteProducts fav, FavouriteProductsDto favDto) {
 		favDto.setCustomerNickName(fav.getCustomer().getCustomer().getNickName());
 		favDto.setID(fav.getID());
+		favDto.setDate(fav.getDate());
 		favDto.setProductId(fav.getProduct().getProductID());
 		
 	}
+	
+	
+	private void convertToDto(Product product, ProductDto productDto) {
+		productDto.setId(product.getProductID());
+		productDto.setPrice(product.getPrice());
+		productDto.setBrand(product.getBrand());
+		productDto.setModel(product.getModel());
+		productDto.setDate(product.getDate());
+		productDto.setStoreNickName(product.getStore().getNickName());
+		productDto.setCategory(CategoryType.valueOf(product.getCategory()));
+		productDto.setFeatures(product.getFeatures());
+		productDto.setUnits(product.getUnits());
+
+		Iterable<PointsOfProduct> pointList = popRep.getPointList(product);
+		List<Double> plist = new ArrayList<Double>();
+		for(PointsOfProduct p : pointList) {
+			plist.add(p.getPoint());
+		}	
+		productDto.setPoints(plist);
+		
+		Iterable<ProductImages> imageList = piRep.getImageList(product);
+		List<String> ilist = new ArrayList<String>();
+		for(ProductImages i : imageList) {
+			ilist.add(i.getImageUri());
+		}	
+		productDto.setImages(ilist);
+		
+		
+ 	}
+
+
+
 
 
 

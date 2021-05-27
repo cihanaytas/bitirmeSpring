@@ -12,6 +12,6 @@ import com.ktu.bitirmeproje.data.entity.prod.Product;
 @Repository
 public interface FavouriteProductsRepository extends CrudRepository<FavouriteProducts, Long>{
 
-	@Query("select f from FavouriteProducts f where f.product= :product and f.customer= :customer")
+	@Query("select f from FavouriteProducts f where f.product= :product and f.customer= :customer order by date asc")
 	public FavouriteProducts getFav(@Param("product") Product product, @Param("customer") CustomerDetails customer);
 }

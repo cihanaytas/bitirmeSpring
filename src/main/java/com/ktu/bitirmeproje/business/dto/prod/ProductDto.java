@@ -16,6 +16,12 @@ public class ProductDto implements Serializable{
 	
 
 	private static final long serialVersionUID = 1L;
+	
+	private static ProductDto instance = new ProductDto();
+	
+	   public static ProductDto getInstance(){
+		      return instance;
+		   }
 
 	public ProductDto(@NotNull long price, @NotNull String brand, @NotNull String model, @NotNull Date date,
 			@NotNull String storeNickName, @NotNull CategoryType category, @NotNull String features,

@@ -1,8 +1,13 @@
 package com.ktu.bitirmeproje.controllers.customer;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import com.ktu.bitirmeproje.data.entity.prod.Product;
+import com.ktu.bitirmeproje.data.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,14 +19,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.ktu.bitirmeproje.business.dto.prod.CommentProductDto;
 import com.ktu.bitirmeproje.business.dto.prod.ProductDto;
-import com.ktu.bitirmeproje.business.service.CustomerService;
 import com.ktu.bitirmeproje.business.service.ProductService;
-import com.ktu.bitirmeproje.business.service.ShoppingService;
-import com.ktu.bitirmeproje.data.repository.StoreRepository;
-import com.ktu.bitirmeproje.data.repository.UserAccountRepository;
 
 @RestController
 @RequestMapping("customer")
@@ -29,19 +29,9 @@ public class CustomerProductController {
 
 	@Autowired
 	private ProductService productService;
-	@Autowired
-	private StoreRepository srep;
-	
-	@Autowired
-	private UserAccountRepository urep;
-	
-	@Autowired
-	private CustomerService customerService;
-	
-	@Autowired
-	private ShoppingService shopService;
-	
 
+	
+	@Cacheable(cacheNames = "mySpecialCache")
 	@GetMapping("products")
 	public List<ProductDto> getAllProduct(){
 		
@@ -49,17 +39,20 @@ public class CustomerProductController {
 	}
 	
 
-	
+	//@Cacheable(cacheNames = "mySpecialCache")
 	@GetMapping("products/{nickName}")
 	public List<ProductDto> getAllProductByNickname(@PathVariable("nickName") String nickName){	
 		return productService.getAllProductByNickname(nickName);
 	}
-	
+
+    //@Cacheable(value = "product",key = "#p0")
+    //@Cacheable(cacheNames = "mySpecialCache")
 	@GetMapping("product/{id}")
 	public List<ProductDto> getProduct(@PathVariable(name = "id") long productId) {
 		return productService.getProductOran(productId);
 	}
 	
+ 
 	
 	
 	@PostMapping("pointproduct/{productId}/{point}")
@@ -95,7 +88,8 @@ public class CustomerProductController {
 		 List<ProductDto> list = productService.getAllProducts(page, 10, "price",false);
 		 return new ResponseEntity<List<ProductDto>>(list, new HttpHeaders(), HttpStatus.OK);
 	}
-	
+
+
 	@PostMapping("addcomment")
 	public boolean addComment(@RequestBody CommentProductDto comment) {
 		return productService.addComment(comment);		
@@ -125,7 +119,7 @@ public class CustomerProductController {
 
 	}
 	
-	
+	//bir kategoriyi ücrete göre listeler
 	@GetMapping("plist/categorybyprice/{category}/{page}")
 	public ResponseEntity<List<ProductDto>> getCategoryByPrice(@PathVariable(name="page") Integer page,@PathVariable(name="category") String category) {
 		 List<ProductDto> list = productService.search(page, 10, "price",category);
@@ -139,6 +133,17 @@ public class CustomerProductController {
 
 	     return new ResponseEntity<List<ProductDto>>(list, new HttpHeaders(), HttpStatus.OK);	
 		
+	}
+ 
+
+ 	@GetMapping("plistt/{categorylist}")
+	public ResponseEntity<List<ProductDto>> getProductListByCategoryList(@PathVariable(name="categorylist") List<String> categorylist){
+
+	System.out.println(categorylist);
+
+		List<ProductDto> listt = productService.getProductListByCategoryList(0, 10, categorylist);
+
+		return new ResponseEntity<List<ProductDto>>(listt, new HttpHeaders(), HttpStatus.OK);
 	}
 	
 }

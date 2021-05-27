@@ -1,5 +1,7 @@
 package com.ktu.bitirmeproje.business.dto;
 
+import java.util.Date;
+
 import com.ktu.bitirmeproje.data.entity.CustomerDetails;
 import com.ktu.bitirmeproje.data.entity.prod.FavouriteProducts;
 import com.ktu.bitirmeproje.data.entity.prod.Product;
@@ -16,5 +18,6 @@ public class FavouriteProductsDto {
 	private long ID;
 	private String customerNickName;
 	private long productId;
+	private Date date;
 	
 }
