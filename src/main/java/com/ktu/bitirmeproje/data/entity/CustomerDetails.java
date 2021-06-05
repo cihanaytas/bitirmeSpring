@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,6 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.ktu.bitirmeproje.data.entity.prod.FavouriteProducts;
+import com.ktu.bitirmeproje.data.entity.prod.NotificationProduct;
 import com.ktu.bitirmeproje.data.entity.prod.Shopping;
 
 import lombok.AllArgsConstructor;
@@ -47,5 +49,9 @@ public class CustomerDetails implements Serializable{
     @OneToMany(targetEntity = FavouriteProducts.class, cascade = CascadeType.ALL)
     @JoinColumn(name="customerdetailId")
     private List<FavouriteProducts> favourites = new ArrayList<FavouriteProducts>();
+    
+    @OneToMany(targetEntity = NotificationProduct.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name="customerdetailId")
+    private List<NotificationProduct> notification = new ArrayList<NotificationProduct>();
 	
 }

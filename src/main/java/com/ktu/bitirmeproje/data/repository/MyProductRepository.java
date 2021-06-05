@@ -23,10 +23,15 @@ public interface MyProductRepository extends PagingAndSortingRepository<Product,
     @Query(value="select * from Product where category like %:c%  or brand like %:c% or model like %:c%" ,nativeQuery= true)
     Page<Product> search(String c, Pageable pageable);
     
-    Page<Product> findByPriceBetween(long min, long max, Pageable pageable);
+    Page<Product> findByPriceBetween(Double min, Double max, Pageable pageable);
 
-	@Query(value="select * from Product where category in :categories",nativeQuery= true)
-	public Page<Product> getProductListByCategoryList(@Param("categories") List<String> categories,Pageable pageable);
+	@Query(value="select * from Product where (category in :categories) and price between :min and :max",nativeQuery= true)
+	public Page<Product> getProductListByCategoryList(@Param("categories") List<String> categories,Double min, Double max,Pageable pageable);
 	
+	@Query(value="select * from Product where category in :categories",nativeQuery= true)
+	public Page<Product> getProductListByCategoryList(@Param("categories") List<String> categories, Pageable pageable);
+	
+	@Query(value="select * from Product where price between :min and :max",nativeQuery= true)
+	public Page<Product> getProductListByCategoryList(Double min, Double max,Pageable pageable);
     
 }

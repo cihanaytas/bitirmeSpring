@@ -29,7 +29,7 @@ public class CustomerDetailController {
 	
 	@GetMapping("favouritesproducts/{page}")
 	public ResponseEntity<List<ProductDto>> getFavouriteProductsList(@PathVariable(name="page") Integer page){
-		 List<ProductDto> list = customerService.getFavouriteProductsList(page,5);
+		List<ProductDto> list = customerService.getFavouriteProductsList(page,5);
 				// productService.search(page, 10, "price",category);
 	    return new ResponseEntity<List<ProductDto>>(list, new HttpHeaders(), HttpStatus.OK);
 		//return customerService.getFavouriteProductsList();

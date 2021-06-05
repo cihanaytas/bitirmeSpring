@@ -31,7 +31,7 @@ public class CustomerProductController {
 	private ProductService productService;
 
 	
-	@Cacheable(cacheNames = "mySpecialCache")
+	//@Cacheable(cacheNames = "mySpecialCache")
 	@GetMapping("products")
 	public List<ProductDto> getAllProduct(){
 		
@@ -69,9 +69,8 @@ public class CustomerProductController {
 	
 	
 	@GetMapping("plist/{category}/{page}")
-	public ResponseEntity<List<ProductDto>> getphonelisst(@PathVariable(name="page") Integer page,@PathVariable(name="category") String category) {
-		 List<ProductDto> list = productService.search(page, 10, "date",category);
-
+	public ResponseEntity<List<ProductDto>> getphonelisst(@PathVariable(name="page") Integer page,@PathVariable(name="category") String category) { 
+		List<ProductDto> list = productService.search(page, 10, "date",category);
 	     return new ResponseEntity<List<ProductDto>>(list, new HttpHeaders(), HttpStatus.OK);
 	}
 	
@@ -128,7 +127,8 @@ public class CustomerProductController {
 	}
 	
 	@GetMapping("plist/priceRange/{min}/{max}/{page}")
-	public ResponseEntity<List<ProductDto>> priceRange(@PathVariable(name="page") Integer page,@PathVariable(name="min") Long min,@PathVariable(name="max") Long max){
+	public ResponseEntity<List<ProductDto>> priceRange(@PathVariable(name="page") Integer page,@PathVariable(name="min") Double min
+			,@PathVariable(name="max") Double max){
 		 List<ProductDto> list = productService.priceRange(page, 10, min, max);
 
 	     return new ResponseEntity<List<ProductDto>>(list, new HttpHeaders(), HttpStatus.OK);	
@@ -136,12 +136,16 @@ public class CustomerProductController {
 	}
  
 
- 	@GetMapping("plistt/{categorylist}")
-	public ResponseEntity<List<ProductDto>> getProductListByCategoryList(@PathVariable(name="categorylist") List<String> categorylist){
+ 	@GetMapping(value= {"plistt/{page}/{categorylist}/{min}/{max}",
+ 			"plistt/{page}/{min}/{max}",
+ 			"plistt/{page}/{categorylist}"
+ 	})
+	public ResponseEntity<List<ProductDto>> getProductListByCategoryList(@PathVariable(required = false,name="categorylist") List<String> categorylist,
+			@PathVariable(required = false,name="min") Double min,@PathVariable(required = false,name="max") Double max,
+			@PathVariable(name="page") Integer page){
 
-	System.out.println(categorylist);
 
-		List<ProductDto> listt = productService.getProductListByCategoryList(0, 10, categorylist);
+		List<ProductDto> listt = productService.getProductListByCategoryList(page, 10, categorylist,min,max);
 
 		return new ResponseEntity<List<ProductDto>>(listt, new HttpHeaders(), HttpStatus.OK);
 	}

@@ -10,7 +10,7 @@ public interface ProductService {
 	
 	public List<ProductDto> getAllProducts();
 	
-	public List<ProductDto> search(Integer pageNo, Integer pageSize, String sortBy,String category);
+	List<ProductDto> search(Integer pageNo, Integer pageSize, String sortBy, String category);
 	
 	public List<ProductDto> getAllProductByNickname(String nickName);
 	
@@ -36,9 +36,13 @@ public interface ProductService {
 
 	public void deleteComment(Long commentId);
 	
-	public List<ProductDto> priceRange(Integer pageNo, Integer pageSize,Long min,Long max);
+	public List<ProductDto> priceRange(Integer pageNo, Integer pageSize,Double min,Double max);
 
-	List<ProductDto> getProductListByCategoryList(Integer pageNo, Integer pageSize, List<String> categories);
+	List<ProductDto> getProductListByCategoryList(Integer pageNo, Integer pageSize, List<String> categories, Double min,Double max);
+
+
+
+
 
 
 }

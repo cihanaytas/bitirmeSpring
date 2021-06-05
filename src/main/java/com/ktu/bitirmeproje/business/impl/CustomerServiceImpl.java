@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import com.ktu.bitirmeproje.business.dto.FavouriteProductsDto;
 import com.ktu.bitirmeproje.business.dto.prod.CartsProductsDto;
@@ -22,9 +23,11 @@ import com.ktu.bitirmeproje.business.dto.prod.ProductDto;
 import com.ktu.bitirmeproje.business.impl.apriori.Apriori;
 import com.ktu.bitirmeproje.business.service.CustomerService;
 import com.ktu.bitirmeproje.data.entity.CustomerDetails;
+import com.ktu.bitirmeproje.data.entity.StoreDetails;
 import com.ktu.bitirmeproje.data.entity.UserAccount;
 import com.ktu.bitirmeproje.data.entity.prod.CartsProducts;
 import com.ktu.bitirmeproje.data.entity.prod.FavouriteProducts;
+import com.ktu.bitirmeproje.data.entity.prod.NotificationProduct;
 import com.ktu.bitirmeproje.data.entity.prod.PointsOfProduct;
 import com.ktu.bitirmeproje.data.entity.prod.Product;
 import com.ktu.bitirmeproje.data.entity.prod.ProductImages;
@@ -36,6 +39,7 @@ import com.ktu.bitirmeproje.data.repository.MyProductRepository;
 import com.ktu.bitirmeproje.data.repository.PointsOfProductRepository;
 import com.ktu.bitirmeproje.data.repository.ProductImagesRepository;
 import com.ktu.bitirmeproje.data.repository.ProductRepository;
+import com.ktu.bitirmeproje.data.repository.StoreRepository;
 import com.ktu.bitirmeproje.utils.CategoryType;
 import com.ktu.bitirmeproje.utils.UserByAuth;
 
@@ -46,6 +50,9 @@ public class CustomerServiceImpl implements CustomerService{
 
 	@Autowired
 	private CustomerRepository customerRepository;
+	
+	@Autowired
+	private StoreRepository storeRepository;
 	
 	@Autowired
 	private ProductRepository productRepository;
@@ -100,17 +107,44 @@ public class CustomerServiceImpl implements CustomerService{
 		
 		customer.getShoppingList().add(shopping);
 		
-		addToFile(cartListDto);
-		
-		apriori.fun();
+		//addToFile(cartListDto);
+			
+	//	apriori.fun();
 				
 		customerRepository.save(customer);
 		
-		
+		addNotification(cartListDto,shopping,customer);
 		
 	}
 	
 	
+	@Async
+	private void addNotification(List<CartsProductsDto> cartListDto, Shopping shopping, CustomerDetails customer) {
+// System.out.println(shopping.getID());
+		for(CartsProductsDto cpDto : cartListDto) {
+			NotificationProduct np = new NotificationProduct();
+			Optional<Product> product = productRepository.findById(cpDto.getProductId());
+			UserAccount s = productRepository.getStoreName(cpDto.getProductId());
+			StoreDetails store = storeRepository.getStoreDetail(s);
+			String bildirim = customer.getCustomer().getName() + " " + customer.getCustomer().getSurname() + " ürünü satın aldı.";
+			
+			np.setProduct(product.get());
+			np.setCustomer(customer);
+			np.setStore(store);
+			np.setDate(new Date());
+			np.setOkundu(false);
+			np.setBildirim(bildirim);
+			//np.setOnay(false);
+			
+			//np.setShop(shopping);
+		
+			customer.getNotification().add(np);
+			customerRepository.save(customer);
+		}
+		
+	}
+
+
 	@Override
 	public List<Long> getFavouriteList() {
 		UserAccount user = authService.getUserByAuth();

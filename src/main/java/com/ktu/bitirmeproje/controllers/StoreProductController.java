@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.ktu.bitirmeproje.business.dto.prod.NotificationProductDto;
 import com.ktu.bitirmeproje.business.dto.prod.ProductDto;
 import com.ktu.bitirmeproje.business.service.ProductService;
+import com.ktu.bitirmeproje.business.service.StoreService;
 
 
 @RestController
@@ -26,6 +29,8 @@ public class StoreProductController {
 	@Autowired
 	private ProductService productService;
 	
+	@Autowired
+	private StoreService storeService;
 		
 	
 	@PostMapping("/addproduct")
@@ -52,6 +57,13 @@ public class StoreProductController {
 	public ProductDto getProduct(@PathVariable(name = "id") long productId) {
 		ProductDto product =  productService.getProduct(productId);
 		return product;
+	}
+	
+	@GetMapping("/notifications")
+	public ResponseEntity<List<NotificationProductDto>> getNotifications(){
+		List<NotificationProductDto> list = storeService.getNotifications();
+		
+		return new ResponseEntity<List<NotificationProductDto>>(list, new HttpHeaders(), HttpStatus.OK);
 	}
 	
 	

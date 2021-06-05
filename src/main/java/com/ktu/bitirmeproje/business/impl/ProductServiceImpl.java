@@ -290,7 +290,7 @@ public class ProductServiceImpl implements ProductService{
 	
 	
 	@Override
-	public List<ProductDto> priceRange(Integer pageNo, Integer pageSize, Long min, Long max) {
+	public List<ProductDto> priceRange(Integer pageNo, Integer pageSize, Double min, Double max) {
 		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by("price").descending());
 		Page<Product> pagedResult = proRep.findByPriceBetween(min, max, paging);
 		return returnProduct(pagedResult);
@@ -364,11 +364,18 @@ public class ProductServiceImpl implements ProductService{
 	
 
 	@Override
-	public List<ProductDto> getProductListByCategoryList(Integer pageNo, Integer pageSize,List<String> categories) {
-
+	public List<ProductDto> getProductListByCategoryList(Integer pageNo, Integer pageSize,List<String> categories,Double min, Double max) {
 		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by("date").descending());
+		Page<Product> pagedResult;
 		
-        Page<Product> pagedResult =  proRep.getProductListByCategoryList(categories,paging);
+		if(categories==null)  
+			pagedResult =  proRep.getProductListByCategoryList(min,max,paging);
+		else if(min==null && max==null)
+			pagedResult =  proRep.getProductListByCategoryList(categories,paging);
+		else
+			pagedResult =  proRep.getProductListByCategoryList(categories,min,max,paging);
+		
+       
         
         return returnProduct(pagedResult);
 	}

@@ -108,10 +108,9 @@ public class CustomerController {
 
 	
 	@PostMapping("customer/sales")
-	public String sales(@RequestBody List<CartsProductsDto> cartList) throws IOException {
+	public void sales(@RequestBody List<CartsProductsDto> cartList) throws IOException {
 		customerService.sales(cartList);
 
-		return "a";
 	}
 	
 	

@@ -25,6 +25,9 @@ public interface ProductRepository extends CrudRepository<Product, Long>{
 	
 	@Query(value = "SELECT * FROM Product where category= :category  ORDER BY RAND () LIMIT 1", nativeQuery = true)
 	public Product randomRow(@Param("category") String category);
+	
+	@Query("select p.store from Product p where p.productID= :productId")
+	public UserAccount getStoreName(@Param("productId") Long productId);
 
 
 
