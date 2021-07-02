@@ -19,6 +19,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import com.ktu.bitirmeproje.business.dto.FavouriteProductsDto;
 import com.ktu.bitirmeproje.business.dto.prod.CartsProductsDto;
+import com.ktu.bitirmeproje.business.dto.prod.NotificationProductDto;
 import com.ktu.bitirmeproje.business.dto.prod.ProductDto;
 import com.ktu.bitirmeproje.business.impl.apriori.Apriori;
 import com.ktu.bitirmeproje.business.service.CustomerService;
@@ -36,12 +37,15 @@ import com.ktu.bitirmeproje.data.repository.CustomerRepository;
 import com.ktu.bitirmeproje.data.repository.FavouriteProductsRepository;
 import com.ktu.bitirmeproje.data.repository.MyFavouriteProductsRepository;
 import com.ktu.bitirmeproje.data.repository.MyProductRepository;
+import com.ktu.bitirmeproje.data.repository.NotificationRepository;
 import com.ktu.bitirmeproje.data.repository.PointsOfProductRepository;
 import com.ktu.bitirmeproje.data.repository.ProductImagesRepository;
 import com.ktu.bitirmeproje.data.repository.ProductRepository;
 import com.ktu.bitirmeproje.data.repository.StoreRepository;
 import com.ktu.bitirmeproje.utils.CategoryType;
 import com.ktu.bitirmeproje.utils.UserByAuth;
+
+import io.lettuce.core.resource.Delay;
 
 
 //@Transactional
@@ -74,6 +78,9 @@ public class CustomerServiceImpl implements CustomerService{
 	
 	@Autowired
 	private ProductImagesRepository piRep;
+	
+	@Autowired
+	private NotificationRepository nRep;
  
 	
 	@Override
@@ -113,14 +120,17 @@ public class CustomerServiceImpl implements CustomerService{
 				
 		customerRepository.save(customer);
 		
-		addNotification(cartListDto,shopping,customer);
+		Shopping shop  = customer.getShoppingList().get(customer.getShoppingList().size()-1);
+		
+		
+		addNotification(cartListDto,shop,customer);
 		
 	}
 	
 	
 	@Async
 	private void addNotification(List<CartsProductsDto> cartListDto, Shopping shopping, CustomerDetails customer) {
-// System.out.println(shopping.getID());
+
 		for(CartsProductsDto cpDto : cartListDto) {
 			NotificationProduct np = new NotificationProduct();
 			Optional<Product> product = productRepository.findById(cpDto.getProductId());
@@ -134,9 +144,10 @@ public class CustomerServiceImpl implements CustomerService{
 			np.setDate(new Date());
 			np.setOkundu(false);
 			np.setBildirim(bildirim);
+			np.setUnits(cpDto.getQuantity());
 			//np.setOnay(false);
 			
-			//np.setShop(shopping);
+			np.setShop(shopping);
 		
 			customer.getNotification().add(np);
 			customerRepository.save(customer);
@@ -230,7 +241,40 @@ public class CustomerServiceImpl implements CustomerService{
 //				
 //		return productDtoList;
 	}
+	
+	
+	@Override
+	public List<NotificationProductDto> getNotifications() {
+		UserAccount customer = authService.getUserByAuth();
+		CustomerDetails c = customerRepository.findByCustomer(customer);
+		List<NotificationProduct> list = nRep.findByCustomer(c);
+		List<NotificationProductDto> listDto = new ArrayList<NotificationProductDto>();
+		
+		for(NotificationProduct np : list) {
+			NotificationProductDto npDto = new NotificationProductDto();
+			convertToDto(np, npDto);
+			listDto.add(npDto);
+			
+		}
+				
+		return listDto;
+	}
 
+	
+	
+	private void convertToDto(NotificationProduct np,NotificationProductDto npDto) {
+		npDto.setID(np.getID());
+		npDto.setBildirim(np.getBildirim());
+		npDto.setCustomerDetailId(np.getCustomer().getId());
+		npDto.setDate(np.getDate());
+		npDto.setProductId(np.getProduct().getProductID());
+		npDto.setStoreDetailId(np.getStore().getId());
+		npDto.setOkundu(np.getOkundu());
+		npDto.setOnay(np.getOnay());
+		npDto.setImageURI(np.getProduct().getImages().get(0).getImageUri());
+		npDto.setShopId(np.getShop().getID());
+		
+	}
 	
 	
 	
@@ -301,6 +345,9 @@ public class CustomerServiceImpl implements CustomerService{
 		
 		
  	}
+
+
+
 
 
 

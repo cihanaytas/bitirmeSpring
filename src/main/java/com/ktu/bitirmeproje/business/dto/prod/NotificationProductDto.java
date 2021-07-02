@@ -29,4 +29,8 @@ public class NotificationProductDto {
 	
 	private Boolean okundu;
 	
+	private String imageURI;
+	
+	private int units;
+	
 }

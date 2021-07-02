@@ -12,6 +12,8 @@ import com.ktu.bitirmeproje.utils.ReqBodyLogin;
 public interface StoreService {
 
 	List<NotificationProductDto> getNotifications();
+
+	public void notificationConfirmation(Long notificationID, Boolean onay);
 	
  
 

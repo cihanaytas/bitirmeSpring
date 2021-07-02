@@ -52,5 +52,7 @@ public class NotificationProduct {
 	
 	private Boolean okundu;
 	
+	private int units;
+	
 	
 }

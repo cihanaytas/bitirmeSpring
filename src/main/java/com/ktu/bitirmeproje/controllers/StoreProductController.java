@@ -66,5 +66,10 @@ public class StoreProductController {
 		return new ResponseEntity<List<NotificationProductDto>>(list, new HttpHeaders(), HttpStatus.OK);
 	}
 	
+	@PutMapping("/notification/{notificationID}/{onay}")
+	public void notificationConfirmation(@PathVariable(name="notificationID") Long notificationID, @PathVariable(name="onay") Boolean onay){
+		storeService.notificationConfirmation(notificationID,onay);
+	}
+	
 	
 }

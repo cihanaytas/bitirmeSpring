@@ -3,6 +3,7 @@ package com.ktu.bitirmeproje.business.service;
 import java.io.IOException;
 import java.util.List;
 import com.ktu.bitirmeproje.business.dto.prod.CartsProductsDto;
+import com.ktu.bitirmeproje.business.dto.prod.NotificationProductDto;
 import com.ktu.bitirmeproje.business.dto.prod.ProductDto;
 
 
@@ -17,5 +18,7 @@ public interface CustomerService {
 	public void deleteFavourite(Long productId);
 
 	public List<ProductDto> getFavouriteProductsList(Integer page, Integer pageSize);
+
+	public List<NotificationProductDto> getNotifications();
  
 }

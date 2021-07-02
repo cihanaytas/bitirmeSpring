@@ -383,8 +383,6 @@ public class ProductServiceImpl implements ProductService{
 
 
 	
-
-	
 	private void convertToDto(Product product, ProductDto productDto) {
 		productDto.setId(product.getProductID());
 		productDto.setPrice(product.getPrice());
@@ -454,32 +452,6 @@ public class ProductServiceImpl implements ProductService{
 			commentDto.setByYou(false);
 		}
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

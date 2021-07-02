@@ -2,6 +2,7 @@ package com.ktu.bitirmeproje.business.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -16,7 +17,9 @@ import com.ktu.bitirmeproje.business.service.StoreService;
 import com.ktu.bitirmeproje.data.entity.StoreDetails;
 import com.ktu.bitirmeproje.data.entity.UserAccount;
 import com.ktu.bitirmeproje.data.entity.prod.NotificationProduct;
+import com.ktu.bitirmeproje.data.entity.prod.Product;
 import com.ktu.bitirmeproje.data.repository.NotificationRepository;
+import com.ktu.bitirmeproje.data.repository.ProductRepository;
 import com.ktu.bitirmeproje.data.repository.StoreRepository;
 import com.ktu.bitirmeproje.exception.ResourceNotFoundException;
 import com.ktu.bitirmeproje.utils.ReqBodyLogin;
@@ -36,6 +39,9 @@ public class StoreServiceImpl implements StoreService{
 	
 	@Autowired
 	private UserByAuth uba;
+	
+	@Autowired
+	private ProductRepository productRepository;
 
 	@Override
 	public List<NotificationProductDto> getNotifications() {
@@ -50,10 +56,24 @@ public class StoreServiceImpl implements StoreService{
 			listDto.add(npDto);
 			
 		}
-		
-		
-		
+				
 		return listDto;
+	}
+	
+	
+	@Override
+	public void notificationConfirmation(Long notificationID, Boolean onay) {
+		Optional<NotificationProduct> notification = nRep.findById(notificationID);
+		NotificationProduct n = notification.get();
+		if(onay==true) {
+		Optional<Product> product = productRepository.findById(n.getProduct().getProductID());
+		Product p = product.get();
+		p.setUnits(p.getUnits()-n.getUnits());
+		}
+		
+		n.setOnay(onay);
+		nRep.save(n);
+		
 	}
 	
 	
@@ -67,9 +87,14 @@ public class StoreServiceImpl implements StoreService{
 		npDto.setStoreDetailId(np.getStore().getId());
 		npDto.setOkundu(np.getOkundu());
 		npDto.setOnay(np.getOnay());
-		//npDto.setShopId(np.getShop().getID());
+		npDto.setImageURI(np.getProduct().getImages().get(0).getImageUri());
+		npDto.setShopId(np.getShop().getID());
 		
 	}
+
+
+
+
  
 
 }

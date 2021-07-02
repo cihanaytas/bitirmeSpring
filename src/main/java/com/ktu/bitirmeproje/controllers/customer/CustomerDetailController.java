@@ -1,6 +1,7 @@
 package com.ktu.bitirmeproje.controllers.customer;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.ktu.bitirmeproje.business.dto.prod.NotificationProductDto;
 import com.ktu.bitirmeproje.business.dto.prod.ProductDto;
 import com.ktu.bitirmeproje.business.service.CustomerService;
 
@@ -44,5 +47,12 @@ public class CustomerDetailController {
 	public void deleteFavourite(@PathVariable(name="productId") Long productId) {
 		customerService.deleteFavourite(productId);
 	}
+	
+	@GetMapping("/notifications")
+	public ResponseEntity<List<NotificationProductDto>> getNotifications(){
+		List<NotificationProductDto> list = customerService.getNotifications();
+		return new ResponseEntity<List<NotificationProductDto>>(list, new HttpHeaders(), HttpStatus.OK);
+	}
+	
 	
 }
